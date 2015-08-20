@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uexplugins>
+	<plugin
+        className="org.zywx.wbpalmstar.plugin.uexesurfingrtc.EUExesurfingRtc" 
+        uexName="uexESurfingRtc" >
+        <method name="setAppKeyAndAppId"/>
+        <method name="login"/>
+        <method name="logout"/>
+        <method name="call"/>
+        <method name="acceptCall"/>
+        <method name="hangUp"/>
+        <method name="mute"/>
+        <method name="loudSpeaker"/>
+        <method name="setVideoAttr"/>
+        <method name="takeRemotePicture"/>
+    </plugin>
+</uexplugins>

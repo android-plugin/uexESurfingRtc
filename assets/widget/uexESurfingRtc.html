@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	
+	<script type="text/javascript">
+    var callBtnTexNormal = "Call";
+    var callBtnTexIncoming = "Accept";
+    var callBtnTexCalling = "Calling";
+    var muteStr = "Mute";
+    var unmuteStr = "Unmute";
+    var loudSpeakerStr = "LoudSpeaker";
+    var phoneSpeakerStr = "PhoneSpeaker";
+
+	function upgateGlobalStatus(opCode, dataType, data){
+		document.getElementById('globalStatus').innerHTML = data;
+	}
+	
+	function upgateLogStatus(opCode, dataType, data){
+        if("OK" == data.substring(0,2))
+        {
+            var status = data.split("OK:")[1];
+            var showStr = "";
+            if("LOGIN" == status)
+            {
+                showStr = "Logout";
+            }
+            else if("LOGOUT" == status)
+            {
+                showStr = "Login";
+            }
+            document.getElementById("logBtn").value = showStr;
+        }
+        else
+        {
+            alert(data);
+        }
+	}
+	
+    function updateCallStatus(opCode, dataType, data){
+        if("OK" == data.substring(0,2))
+        {
+            var status = data.split("OK:")[1];
+            var showStr = "";
+            if("NORMAL" == status)
+            {
+                showStr = callBtnTexNormal;
+            }
+            else if("INCOMING" == status)
+            {
+                showStr = callBtnTexIncoming;
+            }
+            else if("CALLING" == status)
+            {
+                showStr = callBtnTexCalling;
+            }
+            document.getElementById("callBtn").value = showStr;
+        }
+        else
+        {
+            alert(data);
+        }
+    }
+    
+    function showRemotePicPath(opCode, dataType, data){
+        document.getElementById('remotePicPathTx').innerHTML = data;
+    }
+
+	window.uexOnload = function(type){
+		if(type == 0){  
+			uexESurfingRtc.onGlobalStatus = upgateGlobalStatus;
+			uexESurfingRtc.cbLogStatus = upgateLogStatus;
+			uexESurfingRtc.cbCallStatus = updateCallStatus;
+			uexESurfingRtc.cbRemotePicPath = showRemotePicPath;
+		}
+	}
+    
+    function logResponse(){
+        var status = document.getElementById("logBtn").value;
+        if("Login" == status)
+        {
+            login();
+        }
+        else if("Logout" == status)
+        {
+            uexESurfingRtc.logout();
+        }
+    }
+    
+    function callResponse(){
+        var status = document.getElementById("callBtn").value;
+        var callType = document.getElementById("callType").value;
+        var calledUserName = document.getElementById("calledUserName").value;
+        if(callBtnTexNormal == status)
+        {
+            uexESurfingRtc.call(callType, calledUserName);
+        }
+        else if(callBtnTexIncoming == status)
+        {
+            uexESurfingRtc.acceptCall(callType);
+        }
+    }
+    
+    function mute(){
+        var status = document.getElementById("muteBtn").value;
+        if(muteStr == status)
+        {
+            uexESurfingRtc.mute("true");
+            document.getElementById("muteBtn").value = unmuteStr;
+        }
+        else if(unmuteStr == status)
+        {
+            uexESurfingRtc.mute("false");
+            document.getElementById("muteBtn").value = muteStr;
+        }
+    }
+    
+    function loudSpeaker(){
+        var status = document.getElementById("loudSpeakerBtn").value;
+        if(loudSpeakerStr == status)
+        {
+            uexESurfingRtc.loudSpeaker("true");
+            document.getElementById("loudSpeakerBtn").value = phoneSpeakerStr;
+        }
+        else if(phoneSpeakerStr == status)
+        {
+            uexESurfingRtc.loudSpeaker("false");
+            document.getElementById("loudSpeakerBtn").value = loudSpeakerStr;
+        }
+    }
+     
+    function setAppKeyAndAppId(){
+        var appKey = document.getElementById("AppKeytb").value;
+        var appId = document.getElementById("AppIdtb").value;
+        uexESurfingRtc.setAppKeyAndAppId(appKey, appId);
+    }
+    
+    function login(){
+        var x1 = document.getElementById("axis1").value;
+        var y1 = document.getElementById("ordinate1").value;
+        var w1 = document.getElementById("width1").value;
+        var h1 = document.getElementById("hight1").value;
+        var x2 = document.getElementById("axis2").value;
+        var y2 = document.getElementById("ordinate2").value;
+        var w2 = document.getElementById("width2").value;
+        var h2 = document.getElementById("hight2").value;
+        
+        var jsonObj1 = {};
+        jsonObj1.x = x1;
+        jsonObj1.y = y1;
+        jsonObj1.w = w1;
+        jsonObj1.h = h1;
+        var jsonObj2 = {};
+        jsonObj2.x = x2;
+        jsonObj2.y = y2;
+        jsonObj2.w = w2;
+        jsonObj2.h = h2;
+        var json = {};
+        json.localView = jsonObj1;
+        json.remoteView = jsonObj2;
+        
+       /* var json = {
+        
+            localView: {"x":"10", "y":"10", "w":"10", "h":"10"},
+            remoteView: {"x":"10", "y":"10", "w":"10", "h":"10"}
+        
+        };
+        
+        json.localView.x = x1;
+        json.localView.y = y1;
+        json.localView.w = w1;
+        json.localView.h = h1;
+        
+        json.remoteView.x = x2;
+        json.remoteView.y = y2;
+        json.remoteView.w = w2;
+        json.remoteView.h = h2;*/
+        
+        //var jsonStr = '{"localView" : {"x":"10", "y":"800", "w":"432", "h":"528"}, "remoteView" : {"x":"440", "y":"800", "w":"432", "h":"528"}}';
+        var jsonStr = JSON.stringify(json);
+        var jsonAdd = '{"x":"10", "y":"10", "w":"10", "h":"10"}';
+        var userName = document.getElementById("userName").value;
+        uexESurfingRtc.login(jsonStr, userName);
+    }
+    
+    function setVideoAttr(){
+        var videoAttr = document.getElementById("videoAttr").value;
+        uexESurfingRtc.setVideoAttr(videoAttr);
+    }
+    
+    function takeRemotePicture(){
+        var picPath = document.getElementById("picPath").value;
+        uexESurfingRtc.takeRemotePicture(picPath);
+    }
+    
+</script>
+</head>
+
+<body>
+	<div class="tit">uexESurfingRtc</div>
+	<div class="conbor">
+		<div class="consj">
+            <span>状态</span>
+            <div class="tcxx" id="globalStatus"></div>
+            
+            <span>1.设置appKey、AppId接口</span>
+            <span>appKey</span>
+            <input class="textbox" type="text" id="AppKeytb" value="123456">
+            <span>AppId</span>
+            <input class="textbox" type="text" id="AppIdtb" value="123">
+            <input class="btn" type="button" id="setAppKeyIdBtn" value="确定" onclick="setAppKeyAndAppId();"><br><br>
+		
+            <span>2.Login/Logout接口</span>
+			
+            <span>x1</span>
+            <input class="textbox" type="number" id="axis1" value="10">
+            <span>y1</span>
+            <input class="textbox" type="number" id="ordinate1" value="800">
+            <span>width1</span>
+            <input class="textbox" type="number" id="width1" value="432">
+            <span>hight1</span>
+            <input class="textbox" type="number" id="hight1" value="528">
+            
+            <span>x2</span>
+            <input class="textbox" type="number" id="axis2" value="442">
+            <span>y2</span>
+            <input class="textbox" type="number" id="ordinate2" value="800">
+            <span>width2</span>
+            <input class="textbox" type="number" id="width2" value="432">
+            <span>hight2</span>
+            <input class="textbox" type="number" id="hight2" value="528">
+			
+            <!--<span>x</span>
+            <input class="textbox" type="number" id="axis" value="10">
+            <span>y</span>
+            <input class="textbox" type="number" id="ordinate" value="10">
+            <span>width</span>
+            <input class="textbox" type="number" id="width" value="144">
+            <span>hight</span>
+            <input class="textbox" type="number" id="hight" value="176">-->
+			
+            <span>账号</span>
+            <input class="textbox" type="text" id="userName" value="1003">
+            <input class="btn" type="button" id="logBtn" value="Login" onclick="logResponse();"><br>
+            
+            <span>3.Call/acceptCall接口</span>
+            <span>呼叫类型</span>
+            <input class="textbox" type="number" id="callType" value="3">
+            <span>被叫</span>
+            <input class="textbox" type="text" id="calledUserName" value="1002">
+            <input class="btn" type="button" id="callBtn" value="Call" onclick="callResponse();"><br>
+			
+            <span>4.hangUp接口</span>
+            <input class="btn" type="button" id="hangUpBtn" value="Hangup" onclick="uexESurfingRtc.hangUp();"><br>
+            
+            <span>5.mute接口</span>
+            <input class="btn" type="button" id="muteBtn" value="Mute" onclick="mute();"><br><br>
+            
+            <span>6.loudSpeaker接口</span>
+            <input class="btn" type="button" id="loudSpeakerBtn" value="LoudSpeaker" onclick="loudSpeaker();"><br>
+            
+            <span>7.设置视频清晰度接口（下次呼叫生效）</span>
+            <span>清晰度</span>
+            <input class="textbox" type="text" id="videoAttr" value="0">
+            <input class="btn" type="button" id="videoAttrBtn" value="确定" onclick="setVideoAttr();"><br>
+            
+            <span>8.截屏（Remote）接口</span>
+            <span>截屏图片路径</span>
+            <div class="tcxx" id="remotePicPathTx"></div>
+            <input class="btn" type="button" id="picPathBtn" value="截屏" onclick="uexESurfingRtc.takeRemotePicture();"><br>
+		</div>
+	</div>
+</body>
+</html>
