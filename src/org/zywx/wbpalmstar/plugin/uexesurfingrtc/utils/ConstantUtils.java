@@ -35,6 +35,7 @@ public class ConstantUtils
     public static final int WHAT_CALLBACK_LOG_STATUS = 1;
     public static final int WHAT_CALLBACK_CALL_STATUS = 2;
     public static final int WHAT_CALLBACK_REMOTE_PIC_PATH = 3;
+    public static final int WHAT_CALLBACK_SET_APPKEY_ID = 4;
 
     public static final String TRUE_STR = "true";
     public static final String FALSE_STR = "false";
