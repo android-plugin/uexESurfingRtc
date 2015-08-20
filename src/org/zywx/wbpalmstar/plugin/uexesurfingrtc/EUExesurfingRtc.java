@@ -22,7 +22,6 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.View;
 
 /*入口类*/
@@ -36,7 +35,6 @@ public class EUExesurfingRtc extends EUExBase {
     public static final String CALLBACK_LOG_STATUS = "uexESurfingRtc.cbLogStatus";
     public static final String CALLBACK_CALL_STATUS = "uexESurfingRtc.cbCallStatus";
     public static final String CALLBACK_REMOTE_PIC_PATH = "uexESurfingRtc.cbRemotePicPath";
-    public static final String CALLBACK_SET_APPKEY_ID = "uexESurfingRtc.cbSetAppKeyAndAppId";
 
     final int mMyActivityRequestCode = 10000;
     /**uexESurfingRtc use*/
@@ -233,22 +231,16 @@ public class EUExesurfingRtc extends EUExBase {
     public void setAppKeyAndAppId(String[] parm)
     {
         LogUtils.logWlDebug(true, "into setAppKeyAndAppId");
-        String errorMsg = ConstantUtils.ERROR_MSG_ERROR;
-        if(parm.length >= 2 &&
-                !TextUtils.isEmpty(parm[ConstantUtils.SET_APP_KEY_ID_KEY_OFFSET])
-                && !TextUtils.isEmpty(parm[ConstantUtils.SET_APP_KEY_ID_ID_OFFSET]))
+        
+        if(parm.length >= 2)
         {
             RtcBase.setAppKey(parm[ConstantUtils.SET_APP_KEY_ID_KEY_OFFSET]);
             RtcBase.setAppId(parm[ConstantUtils.SET_APP_KEY_ID_ID_OFFSET]);
-            errorMsg = ConstantUtils.ERROR_MSG_OK;
         }
         else
         {
             LogUtils.logError(LogUtils.getLineInfo() + "setAppKeyAndAppId ERROR");
-            errorMsg = ConstantUtils.ERROR_MSG_PARM_ERROR;
         }
-
-        mCbhandler.send2Callback(ConstantUtils.WHAT_CALLBACK_SET_APPKEY_ID, errorMsg);
     }   
     
     /**
@@ -256,7 +248,7 @@ public class EUExesurfingRtc extends EUExBase {
     *
     * 
     */
-   public void initESurfingRtc(final String userName)
+   public void initESurfingRtc(String userName)
    {
        LogUtils.logWlDebug(DEBUG, "into initESurfingRtc");
        if(null == mSurfaceViewRtc)
@@ -265,14 +257,9 @@ public class EUExesurfingRtc extends EUExBase {
        }
        mInit = !mInit;
 
-       if(mInit)
+       if(mInit) 
        {
-           new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mClt = mRtcLogin.initRtcClientImpl(userName);
-            }
-        }).start();
+           mClt = mRtcLogin.initRtcClientImpl(userName);
        }
    }
     
@@ -313,7 +300,7 @@ public class EUExesurfingRtc extends EUExBase {
     }
     
     /**
-     * logout.
+     * login.
      *
      * @param 
      */
@@ -573,9 +560,6 @@ public class EUExesurfingRtc extends EUExBase {
                 break;
             case ConstantUtils.WHAT_CALLBACK_REMOTE_PIC_PATH:
                 jsCallback(CALLBACK_REMOTE_PIC_PATH, 0, EUExCallback.F_C_TEXT, (String)msg.obj);
-                break;
-            case ConstantUtils.WHAT_CALLBACK_SET_APPKEY_ID:
-                jsCallback(CALLBACK_SET_APPKEY_ID, 0, EUExCallback.F_C_TEXT, (String)msg.obj);
                 break;
             }
         }
