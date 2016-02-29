@@ -1,6 +1,7 @@
 package org.zywx.wbpalmstar.plugin.uexesurfingrtc;
 
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
+
 import rtc.sdk.iface.Connection;
 import android.content.Context;
 import android.view.SurfaceView;
@@ -11,6 +12,7 @@ public class SurfaceViewRtc{
     
     private EUExBase mEuExBase;
     private Context mContext;
+    static RelativeLayout.LayoutParams lparm1, lparm2;
     
     public SurfaceViewRtc(EUExBase mEuExBase, Context mContext)
     {
@@ -24,14 +26,20 @@ public class SurfaceViewRtc{
         SurfaceView mSurfaceView = (SurfaceView) mCall
                 .createVideoView(isLocalView, ctx, bOpenGL);
         mSurfaceView.setVisibility(View.INVISIBLE);
-        mSurfaceView.setKeepScreenOn(true);
-        mSurfaceView.setZOrderMediaOverlay(true);
-        mSurfaceView.setZOrderOnTop(true);
+        if(isLocalView) {
+            mSurfaceView.setKeepScreenOn(true);
+            //mSurfaceView.setZOrderMediaOverlay(true);
+            //mSurfaceView.setZOrderOnTop(true);
+        }
         RelativeLayout.LayoutParams lparm 
                 = new RelativeLayout.LayoutParams(mViewConfig.width, mViewConfig.hight);
         lparm.leftMargin = mViewConfig.axis;
         lparm.topMargin = mViewConfig.ordinate;
         mEuExBase.addViewToCurrentWindow(mSurfaceView, lparm);
+        if(isLocalView)
+        	lparm1 = lparm;
+        else
+        	lparm2 = lparm;
         return mSurfaceView;
     }
     
@@ -47,9 +55,9 @@ public class SurfaceViewRtc{
         {
 
             mCallView.mvLocal = createVideoView(true, mContext,
-                    true, mCall, mLocalViewConfig);
+                    false, mCall, mLocalViewConfig);
             mCallView.mvRemote = createVideoView(false, mContext,
-                    true, mCall, mRemoteViewConfig);
+            		false, mCall, mRemoteViewConfig);
         }
         return mCallView;
     }

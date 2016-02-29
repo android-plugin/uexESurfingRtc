@@ -2,12 +2,11 @@
 <uexplugins>
    <!-- plugin uexESurfingRtc -->
     <plugin
-        uexName="uexESurfingRtc" version="3.1.6" build="6">
-	<info>6:支持单例，全部回调到root页
-		增加文本聊天接口
-		完善事件通知
-		调整callType的值
+        uexName="uexESurfingRtc" version="3.1.7" build="7">
+	<info>7:增加前后摄像头切换、摄像头旋转、窗口交换接口
+		呼叫接口增加参数
 	</info>
+	<build>6:支持单例，全部回调到root页、增加文本聊天接口、完善事件通知、调整callType的值</build>
 	<build>5:升级RTC sdk_2.6</build>
         <build>4:升级RTC sdk_2.5</build>
         <build>3:添加设置appKey和appId的回调。</build>

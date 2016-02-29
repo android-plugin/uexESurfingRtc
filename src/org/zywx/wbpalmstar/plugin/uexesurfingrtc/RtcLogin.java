@@ -221,6 +221,7 @@ public class RtcLogin{
             //jargs.put(RtcConst.kAccName,"逍遥神龙");
             jargs.put(RtcConst.kAccUser,sname); //号码
             jargs.put(RtcConst.kAccType,RtcConst.UEType_Current);//终端类型
+            jargs.put(RtcConst.kAccSrtp, 2);
             
             mAcc = mClt.createDevice(jargs.toString(), mAListener); //注册
 

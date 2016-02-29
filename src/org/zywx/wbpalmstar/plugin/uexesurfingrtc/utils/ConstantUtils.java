@@ -7,6 +7,7 @@ public class ConstantUtils
     
     public static final int CALL_TYPE_ID_OFFSET = 0;
     public static final int CALL_USER_NAME_OFFSET = 1;
+    public static final int CALL_INFO_OFFSET = 2;
 
     public static final int MSG_USER_NAME_OFFSET  = 0;
     public static final int MSG_TYPE_MSG_OFFSET = 1;
@@ -58,5 +59,7 @@ public class ConstantUtils
     public static final String JK_VIEW_CON_Y = "y";
     public static final String JK_VIEW_CON_W = "w";
     public static final String JK_VIEW_CON_H = "h";
+    
+    public static final String CAMERA_BACK = "back";
     
 }

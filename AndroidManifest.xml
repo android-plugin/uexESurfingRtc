@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="org.zywx.wbpalmstar.widgetone.uexESurfingRtc" 
 	android:versionCode="1"
-	android:versionName="1.0">
+	android:versionName="1.2">
 
 	<application android:name="org.zywx.wbpalmstar.widgetone.WidgetOneApplication"
 		android:allowClearUserData="false" 
@@ -35,7 +35,7 @@
 
 	
 	<!-- 可改动区域 -->
-	<uses-sdk android:minSdkVersion="4" />
+	<uses-sdk android:minSdkVersion="5" />
 	
 	<!-- uexESurfingRtc use -->
     <uses-permission android:name="android.permission.INTERNET" />

@@ -15,11 +15,11 @@
     var loudSpeakerStr = "LoudSpeaker";
     var phoneSpeakerStr = "PhoneSpeaker";
 
-	function upgateGlobalStatus(opCode, dataType, data){
+	function upgateGlobalStatus(opId, dataType, data){
 		document.getElementById('globalStatus').innerHTML = data;
 	}
 	
-	function upgateLogStatus(opCode, dataType, data){
+	function upgateLogStatus(opId, dataType, data){
         if("OK" == data.substring(0,2))
         {
             var status = data.split("OK:")[1];
@@ -40,7 +40,7 @@
         }
 	}
 	
-    function updateCallStatus(opCode, dataType, data){
+    function updateCallStatus(opId, dataType, data){
         if("OK" == data.substring(0,2))
         {
             var status = data.split("OK:")[1];
@@ -65,9 +65,14 @@
         }
     }
     
-    function showRemotePicPath(opCode, dataType, data){
+    function showRemotePicPath(opId, dataType, data){
         document.getElementById('remotePicPathTx').innerHTML = data;
     }
+    
+    function upgateMessageStatus(opId, dataType, data){
+        alert(data);
+    }
+
 
 	window.uexOnload = function(type){
 		if(type == 0){  
@@ -75,6 +80,7 @@
 			uexESurfingRtc.cbLogStatus = upgateLogStatus;
 			uexESurfingRtc.cbCallStatus = updateCallStatus;
 			uexESurfingRtc.cbRemotePicPath = showRemotePicPath;
+			uexESurfingRtc.cbMessageStatus = upgateMessageStatus;
 		}
 	}
     
@@ -94,9 +100,10 @@
         var status = document.getElementById("callBtn").value;
         var callType = document.getElementById("callType").value;
         var calledUserName = document.getElementById("calledUserName").value;
+		var callInfo = document.getElementById("callInfo").value;
         if(callBtnTexNormal == status)
         {
-            uexESurfingRtc.call(callType, calledUserName);
+            uexESurfingRtc.call(callType, calledUserName, callInfo);
         }
         else if(callBtnTexIncoming == status)
         {
@@ -192,10 +199,29 @@
     }
     
     function takeRemotePicture(){
-        var picPath = document.getElementById("picPath").value;
-        uexESurfingRtc.takeRemotePicture(picPath);
+        uexESurfingRtc.takeRemotePicture();
     }
     
+    function sendMsg(){
+        var calledUserName = document.getElementById("calledUserName").value;
+        var message = document.getElementById("message").value;
+        uexESurfingRtc.sendMessage(calledUserName, message);
+    }
+
+    function switchCam(){
+        var camera = document.getElementById("switchCamera").value;
+        if(camera == "back")
+            document.getElementById("switchCamera").value = "front";
+        else if(camera == "front")
+            document.getElementById("switchCamera").value = "back";
+        uexESurfingRtc.switchCamera(camera);
+    }
+
+    function rotateCam(){
+        var angle = document.getElementById("angle").value;
+        uexESurfingRtc.rotateCamera(angle);
+    }
+
 </script>
 </head>
 
@@ -218,20 +244,20 @@
             <span>x1</span>
             <input class="textbox" type="number" id="axis1" value="10">
             <span>y1</span>
-            <input class="textbox" type="number" id="ordinate1" value="800">
+            <input class="textbox" type="number" id="ordinate1" value="80">
             <span>width1</span>
             <input class="textbox" type="number" id="width1" value="432">
             <span>hight1</span>
             <input class="textbox" type="number" id="hight1" value="528">
             
             <span>x2</span>
-            <input class="textbox" type="number" id="axis2" value="442">
+            <input class="textbox" type="number" id="axis2" value="10">
             <span>y2</span>
-            <input class="textbox" type="number" id="ordinate2" value="800">
+            <input class="textbox" type="number" id="ordinate2" value="80">
             <span>width2</span>
-            <input class="textbox" type="number" id="width2" value="432">
+            <input class="textbox" type="number" id="width2" value="864">
             <span>hight2</span>
-            <input class="textbox" type="number" id="hight2" value="528">
+            <input class="textbox" type="number" id="hight2" value="1056">
 			
             <!--<span>x</span>
             <input class="textbox" type="number" id="axis" value="10">
@@ -243,14 +269,16 @@
             <input class="textbox" type="number" id="hight" value="176">-->
 			
             <span>账号</span>
-            <input class="textbox" type="text" id="userName" value="1003">
+            <input class="textbox" type="text" id="userName" value="1369">
             <input class="btn" type="button" id="logBtn" value="Login" onclick="logResponse();"><br>
             
             <span>3.Call/acceptCall接口</span>
             <span>呼叫类型</span>
-            <input class="textbox" type="number" id="callType" value="3">
+            <input class="textbox" type="number" id="callType" value="2">
             <span>被叫</span>
             <input class="textbox" type="text" id="calledUserName" value="1002">
+			<span>可选附加信息</span>
+            <input class="textbox" type="text" id="callInfo" value="逍遙神龍--->">
             <input class="btn" type="button" id="callBtn" value="Call" onclick="callResponse();"><br>
 			
             <span>4.hangUp接口</span>
@@ -265,12 +293,26 @@
             <span>7.设置视频清晰度接口（下次呼叫生效）</span>
             <span>清晰度</span>
             <input class="textbox" type="text" id="videoAttr" value="0">
-            <input class="btn" type="button" id="videoAttrBtn" value="确定" onclick="setVideoAttr();"><br>
+            <input class="btn" type="button" id="videoAttrBtn" value="SetVideoAttr" onclick="setVideoAttr();"><br>
             
             <span>8.截屏（Remote）接口</span>
             <span>截屏图片路径</span>
             <div class="tcxx" id="remotePicPathTx"></div>
-            <input class="btn" type="button" id="picPathBtn" value="截屏" onclick="uexESurfingRtc.takeRemotePicture();"><br>
+            <input class="btn" type="button" id="picPathBtn" value="TakeRemotePicture" onclick="uexESurfingRtc.takeRemotePicture();"><br>
+            
+            <span>9.文本消息接口</span>
+            <input class="textbox" type="text" id="message" value="来聊天吧@">
+            <input class="btn" type="button" id="sendMsgBtn" value="sendMessage" onclick="sendMsg();"><br>
+            
+            <span>10.摄像头切换</span>
+            <input class="btn" type="button" id="switchCamera" value="back" onclick="switchCam();"><br>
+
+            <span>11.旋转摄像头</span>
+            <input class="textbox" type="text" id="angle" value=0>
+            <input class="btn" type="button" id="rotateCamera" value="RotateCamera" onclick="rotateCam();"><br>
+            
+            <span>12.画面交换</span>
+            <input class="btn" type="button" id="switchView" value="SwitchView" onclick="uexESurfingRtc.switchView();"><br>
 		</div>
 	</div>
 </body>

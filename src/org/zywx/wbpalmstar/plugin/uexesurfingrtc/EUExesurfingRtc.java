@@ -59,6 +59,7 @@ public class EUExesurfingRtc extends EUExBase {
     private String remotePicPathString = "";
     private ViewConfig mLocalViewConfig = null;
     private ViewConfig mRemoteViewConfig = null;
+    private static boolean switchFlag = false;
     
     /** The m a listener. */
     private DeviceListener mAListener = new DeviceListener() {
@@ -405,30 +406,28 @@ public class EUExesurfingRtc extends EUExBase {
                 + "into call transtype = " + RtcConst.TransType);
         String errorMsg = ConstantUtils.ERROR_MSG_ERROR;
         boolean startCall = false;
-        if(parm.length >= 2)
+        if(parm.length >= 3)
         {
-            if (mAcc != null)
+            if (mAcc != null && mCall == null)
             {
-                if (mCall == null)
-                {
-                    int mCallType = ConstantUtils.CALL_TYPE_AUDIO_AND_VIDED;
-                    mCallType = RtcLogin.getCallType(Integer
-                            .parseInt(parm[ConstantUtils.CALL_TYPE_ID_OFFSET]));
-                    startCall = true;
-                    try {
-                        String remoteUserName = RtcRules.UserToRemoteUri_new(parm[ConstantUtils.CALL_USER_NAME_OFFSET],
-                                RtcConst.UEType_Any);
-                        
-                        JSONObject jinfo = new JSONObject();
-                        jinfo.put(RtcConst.kCallRemoteUri, remoteUserName);
-                        jinfo.put(RtcConst.kCallInfo, "逍遙神龍--->"); //opt
-                        jinfo.put(RtcConst.kCallType, mCallType);
-                        mCall = mAcc.connect(jinfo.toString(), mCListener);
-                        mCbhandler.send2Callback(ConstantUtils.WHAT_CALLBACK_CALL_STATUS, 
-                                ConstantUtils.CALL_STATUS_CALLING);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                int mCallType = ConstantUtils.CALL_TYPE_AUDIO_AND_VIDED;
+                mCallType = RtcLogin.getCallType(Integer
+                        .parseInt(parm[ConstantUtils.CALL_TYPE_ID_OFFSET]));
+                startCall = true;
+                try {
+                    String remoteUserName = RtcRules.UserToRemoteUri_new(parm[ConstantUtils.CALL_USER_NAME_OFFSET],
+                            RtcConst.UEType_Any);
+                    
+                    JSONObject jinfo = new JSONObject();
+                    jinfo.put(RtcConst.kCallRemoteUri, remoteUserName);
+                    if(parm[ConstantUtils.CALL_INFO_OFFSET].length() > 0)
+                    	jinfo.put(RtcConst.kCallInfo, parm[ConstantUtils.CALL_INFO_OFFSET]); //opt
+                    jinfo.put(RtcConst.kCallType, mCallType);
+                    mCall = mAcc.connect(jinfo.toString(), mCListener);
+                    mCbhandler.send2Callback(ConstantUtils.WHAT_CALLBACK_CALL_STATUS, 
+                            ConstantUtils.CALL_STATUS_CALLING);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
             else
@@ -556,6 +555,51 @@ public class EUExesurfingRtc extends EUExBase {
         else
         {
         	mCbhandler.send2Callback(ConstantUtils.WHAT_CALLBACK_MSG_STATUS, ConstantUtils.ERROR_MSG_PARM_ERROR);
+        }
+    }
+    
+    public void switchCamera(String[] parm)
+    {
+        LogUtils.logWlDebug(DEBUG, LogUtils.getLineInfo() + "into switchCamera");
+        if((parm.length >= 1) && (mCall != null))
+        {
+        	if(parm[0].equals(ConstantUtils.CAMERA_BACK))
+        		mCall.setCamera(0);
+        	else
+        		mCall.setCamera(1);
+        }
+    }
+    
+    public void rotateCamera(String[] parm)
+    {
+        LogUtils.logWlDebug(DEBUG, LogUtils.getLineInfo() + "into rotateCamera");
+        if((parm.length >= 1) && (mCall != null))
+        {
+        	int angle = Integer.parseInt(parm[0]);
+        	if(angle >= 0 && angle <=3)
+    			mCall.setCameraAngle(angle);
+        }
+    }
+    
+    public void switchView(String[] parm)
+    {
+        LogUtils.logWlDebug(DEBUG, LogUtils.getLineInfo() + "into switchView");
+        if(mCall != null)
+        {
+        	removeViewFromCurrentWindow(mCallView.mvLocal);
+        	removeViewFromCurrentWindow(mCallView.mvRemote);
+        	try{
+        		Thread.sleep(200);
+        	}catch(InterruptedException e){}
+        	if(switchFlag) {
+        		addViewToCurrentWindow(mCallView.mvLocal, mSurfaceViewRtc.lparm1);
+        		addViewToCurrentWindow(mCallView.mvRemote, mSurfaceViewRtc.lparm2);
+        	} else {
+        		addViewToCurrentWindow(mCallView.mvRemote, mSurfaceViewRtc.lparm1);
+        		addViewToCurrentWindow(mCallView.mvLocal, mSurfaceViewRtc.lparm2);
+        	}
+        	mCall.resetVideoViews();
+			switchFlag = !switchFlag;
         }
     }
     

@@ -15,5 +15,8 @@
         <method name="setVideoAttr"/>
         <method name="takeRemotePicture"/>
         <method name="sendMessage"/>
+        <method name="switchCamera"/>
+        <method name="rotateCamera"/>
+        <method name="switchView"/>
     </plugin>
 </uexplugins>
