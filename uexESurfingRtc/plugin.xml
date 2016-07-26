@@ -18,5 +18,6 @@
         <method name="switchCamera"/>
         <method name="rotateCamera"/>
         <method name="switchView"/>
+        <method name="hideLocalView"/>
     </plugin>
 </uexplugins>

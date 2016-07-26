@@ -222,6 +222,15 @@
         uexESurfingRtc.rotateCamera(angle);
     }
 
+    function hideLocalView(){
+        var set = document.getElementById("hideLocalView").value;
+        if(set == "hide")
+            document.getElementById("hideLocalView").value = "show";
+        else if(set == "show")
+            document.getElementById("hideLocalView").value = "hide";
+        uexESurfingRtc.hideLocalView(set);
+    }
+
 </script>
 </head>
 
@@ -313,6 +322,9 @@
             
             <span>12.画面交换</span>
             <input class="btn" type="button" id="switchView" value="SwitchView" onclick="uexESurfingRtc.switchView();"><br>
+            
+            <span>13.隐藏本地窗口</span>
+            <input class="btn" type="button" id="hideLocalView" value="hide" onclick="hideLocalView();"><br>
 		</div>
 	</div>
 </body>

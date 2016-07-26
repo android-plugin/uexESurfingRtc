@@ -35,6 +35,7 @@ public class ConstantUtils
     public static final int MSG_REMOVE_SURFACE_VIEW = 10003;
     public static final int MSG_RTC_CLIENT_ON_INIT = 10004;
     public static final int MSG_REGISTER = 10005;
+    public static final int MSG_SET_LOCAL_VIEW_VISIBILITUY = 10006;
     
     public static final int WHAT_CALLBACK_GLOBAL_STATUS = 0;
     public static final int WHAT_CALLBACK_LOG_STATUS = 1;
@@ -61,5 +62,7 @@ public class ConstantUtils
     public static final String JK_VIEW_CON_H = "h";
     
     public static final String CAMERA_BACK = "back";
+    public static final String VIEW_HIDE = "hide";
+    public static final String VIEW_SHOW = "show";
     
 }

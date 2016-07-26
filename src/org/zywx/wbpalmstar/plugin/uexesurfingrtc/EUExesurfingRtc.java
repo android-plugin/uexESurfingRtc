@@ -233,6 +233,15 @@ public class EUExesurfingRtc extends EUExBase {
             case ConstantUtils.MSG_REGISTER:
 //                register((String)msg.obj);
                 break;
+            case ConstantUtils.MSG_SET_LOCAL_VIEW_VISIBILITUY:
+            	mCallView.mvLocal.setVisibility(msg.arg1);
+            	if(msg.arg1 == View.VISIBLE) {
+            		mCall.resetVideoViews();
+            		mCall.fillSend(0);
+            	} else {
+            		mCall.fillSend(1);
+            	}
+                break;
             default:
                 break;
             }
@@ -600,6 +609,21 @@ public class EUExesurfingRtc extends EUExBase {
         	}
         	mCall.resetVideoViews();
 			switchFlag = !switchFlag;
+        }
+    }
+    
+    public void hideLocalView(String[] parm)
+    {
+        LogUtils.logWlDebug(DEBUG, LogUtils.getLineInfo() + "into hideLocalView");
+        if(mCall != null && mCallView != null)
+        {
+        	Message msg = new Message(); 
+            msg.what = ConstantUtils.MSG_SET_LOCAL_VIEW_VISIBILITUY;
+        	if(parm[0].equals(ConstantUtils.VIEW_SHOW))
+        		msg.arg1 = View.VISIBLE;
+        	else if(parm[0].equals(ConstantUtils.VIEW_HIDE))
+        		msg.arg1 = View.INVISIBLE;
+            mUIHandler.sendMessage(msg);
         }
     }
     
