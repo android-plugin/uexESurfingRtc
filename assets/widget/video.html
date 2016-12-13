@@ -16,7 +16,6 @@
     var phoneSpeakerStr = "PhoneSpeaker";
 
 	function upgateGlobalStatus(opId, dataType, data){
-		alert(data);
 		document.getElementById('globalStatus').innerHTML = data;
 	}
 	
@@ -231,7 +230,7 @@
             document.getElementById("hideLocalView").value = "hide";
         uexESurfingRtc.hideLocalView(set);
     }
-//uexWindow.open('', '0', 'video.html', 1, 0, 0, 0, 500);
+
 </script>
 </head>
 
@@ -239,9 +238,12 @@
 	<div class="tit">uexESurfingRtc</div>
 	<div class="conbor">
 		<div class="consj">
+            <span>video页
+			<br>视频画面会显示在收到onVido时最上层的页面上，如果该页面被销毁就看不到画面，再打开就会看到
+			（如果打开过覆盖了视频窗口的页面，视频窗口所在的页面又因为返回上一层而被销毁，那么可能需要打开更上层的页面才能看到）
+			有时看不到本地画面可以调用接口hideLocalView("show")</span>
 
-            <input class="btn" type="button" id="openWindowBtn" value="打开video页" onclick="uexWindow.open('callUser','0','video.html','0','0','0','0','200');"><br><br>
-
+            <input class="btn" type="button" id="openWindowBtn" value="打开video页" onclick="uexWindow.open('', '0', 'video.html', 1, 0, 0, 0, 500);"><br><br>
             <span>状态</span>
             <div class="tcxx" id="globalStatus"></div>
             
@@ -293,6 +295,7 @@
 			<span>可选附加信息</span>
             <input class="textbox" type="text" id="callInfo" value="逍遙神龍--->">
             <input class="btn" type="button" id="callBtn" value="Call" onclick="callResponse();"><br>
+			<input class="btn" type="button" id="acceptBtn" value="接听（多页面专用，没有判断呼叫状态）" onclick="uexESurfingRtc.acceptCall('2');"><br>
 			
             <span>4.hangUp接口</span>
             <input class="btn" type="button" id="hangUpBtn" value="Hangup" onclick="uexESurfingRtc.hangUp();"><br>

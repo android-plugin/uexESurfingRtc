@@ -12,8 +12,8 @@ import rtc.sdk.common.RtcConst;
 
 public class RtcBase{
 
-    private static String APP_ID = "123";//
-    private static String APP_KEY ="123456";//
+    private static String APP_ID = "70063";//
+    private static String APP_KEY ="MTQzMTQyNTM2MzA4NQ==";//
     
     public static String getAppId()
     {

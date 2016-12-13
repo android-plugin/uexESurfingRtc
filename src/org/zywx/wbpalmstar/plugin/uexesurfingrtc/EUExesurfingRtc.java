@@ -1,5 +1,7 @@
 package org.zywx.wbpalmstar.plugin.uexesurfingrtc;
 
+import java.util.ArrayList;
+
 import jni.util.Utils;
 
 import org.json.JSONException;
@@ -46,20 +48,21 @@ public class EUExesurfingRtc extends EUExBase {
     private final boolean DEBUG = true;
     private CbHandler mCbhandler = new CbHandler();
     /** The m clt. */
-    private RtcClient mClt;
+    private static RtcClient mClt;
     /** The m init. */
-    private  boolean mInit = false; //init
-    private SurfaceViewRtc mSurfaceViewRtc = null;
-    private CallView mCallView = null;
-    private RtcLogin mRtcLogin = null;
+    private static boolean mInit = false; //init
+    private static SurfaceViewRtc mSurfaceViewRtc = null;
+    private static CallView mCallView = null;
+    private static RtcLogin mRtcLogin = null;
     /** The m acc. */
-    private Device mAcc = null;  //reg 
+    private static Device mAcc = null;  //reg 
     /** The m call. */
     private static Connection mCall = null;
     private String remotePicPathString = "";
-    private ViewConfig mLocalViewConfig = null;
-    private ViewConfig mRemoteViewConfig = null;
+    private static ViewConfig mLocalViewConfig = null;
+    private static ViewConfig mRemoteViewConfig = null;
     private static boolean switchFlag = false;
+    private static ArrayList<EUExesurfingRtc> sRtc = new ArrayList<EUExesurfingRtc>();
     
     /** The m a listener. */
     private DeviceListener mAListener = new DeviceListener() {
@@ -190,6 +193,7 @@ public class EUExesurfingRtc extends EUExBase {
         public void onVideo() {
             mCbhandler.send2Callback(ConstantUtils.WHAT_CALLBACK_GLOBAL_STATUS, 
                     "ConnectionListener:onVideo");
+            initSurfaceViewRtc();
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -222,7 +226,13 @@ public class EUExesurfingRtc extends EUExBase {
                 mAcc = mRtcLogin.onResponseGetToken(msg, mAcc, mClt, mAListener);
                 break;
             case ConstantUtils.MSG_SET_SURFACE_VIEW_VISIBILITUY:
-                mSurfaceViewRtc.setVideoSurfaceVisibility(mCallView, msg.arg1);
+            	if(mCallView != null && mSurfaceViewRtc != null) {
+            	    mSurfaceViewRtc.setVideoSurfaceVisibility(mCallView, msg.arg1);
+            	    if(msg.arg1 == View.INVISIBLE) {
+            	    	mCallView = null;
+            	    	mSurfaceViewRtc = null;
+            	    }
+            	}
                 break;
             case ConstantUtils.MSG_REMOVE_SURFACE_VIEW:
                 destroySurfaceView();
@@ -255,6 +265,7 @@ public class EUExesurfingRtc extends EUExBase {
     public EUExesurfingRtc(Context context, EBrowserView view)
     {
         super(context, view);
+        //sRtc = this;
         Log.e("appcan","先看看咋回事吧！");
     }
     
@@ -292,10 +303,7 @@ public class EUExesurfingRtc extends EUExBase {
    public void initESurfingRtc(final String userName)
    {
        LogUtils.logWlDebug(DEBUG, "into initESurfingRtc");
-       if(null == mSurfaceViewRtc)
-       {
-           mSurfaceViewRtc = new SurfaceViewRtc(this, mContext);
-       }
+
        mInit = !mInit;
 
        if(mInit)
@@ -309,6 +317,16 @@ public class EUExesurfingRtc extends EUExBase {
        }
    }
     
+   
+   public void initSurfaceViewRtc()
+   {
+       if(null == mSurfaceViewRtc)
+       {
+           mSurfaceViewRtc = new SurfaceViewRtc(sRtc.get(sRtc.size()-1), mContext);
+       }
+   }
+   
+
     /**
      * login.
      *
@@ -387,7 +405,7 @@ public class EUExesurfingRtc extends EUExBase {
     
     private void destroySurfaceView()
     {
-        if(mCallView != null)
+        if(mCallView != null && mSurfaceViewRtc != null)
         {
             mSurfaceViewRtc.setVideoSurfaceVisibility(mCallView, View.INVISIBLE);
             if(mCallView.mvLocal != null)
@@ -417,7 +435,11 @@ public class EUExesurfingRtc extends EUExBase {
         boolean startCall = false;
         if(parm.length >= 3)
         {
-            if (mAcc != null && mCall == null)
+            if(mAcc == null)
+			{
+                errorMsg = ConstantUtils.ERROR_MSG_UNREGISTER;
+            }
+            else if (mCall == null)
             {
                 int mCallType = ConstantUtils.CALL_TYPE_AUDIO_AND_VIDED;
                 mCallType = RtcLogin.getCallType(Integer
@@ -438,10 +460,6 @@ public class EUExesurfingRtc extends EUExBase {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-            else
-            {
-                errorMsg = ConstantUtils.ERROR_MSG_UNREGISTER;
             }
         }
         else
@@ -593,7 +611,7 @@ public class EUExesurfingRtc extends EUExBase {
     public void switchView(String[] parm)
     {
         LogUtils.logWlDebug(DEBUG, LogUtils.getLineInfo() + "into switchView");
-        if(mCall != null)
+        if(mCall != null && mCallView != null && mSurfaceViewRtc != null)
         {
         	removeViewFromCurrentWindow(mCallView.mvLocal);
         	removeViewFromCurrentWindow(mCallView.mvRemote);
@@ -652,6 +670,16 @@ public class EUExesurfingRtc extends EUExBase {
     @Override
     protected boolean clean()
     {
+    	if(sRtc.size() == 0) {
+    		sRtc.add(this);
+    	}
+    	else if(sRtc.get(sRtc.size()-1) == this) {
+    		sRtc.remove(sRtc.size()-1);
+    	}
+    	else {
+    		sRtc.add(this);
+    	}
+    	Log.e("appcan", "clean "+this);
         return true;
     }
 

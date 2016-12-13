@@ -3,7 +3,7 @@
 	<plugin
         className="org.zywx.wbpalmstar.plugin.uexesurfingrtc.EUExesurfingRtc" 
         uexName="uexESurfingRtc"
-        global="true" >
+        global="false" >
         <method name="setAppKeyAndAppId"/>
         <method name="login"/>
         <method name="logout"/>
