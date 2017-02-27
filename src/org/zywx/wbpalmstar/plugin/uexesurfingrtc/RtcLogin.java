@@ -125,7 +125,7 @@ public class RtcLogin{
             {
                 optGetToken(userName);
             }
-        }.start();  
+        }.start();
 
         //如果直接注册  
     }
@@ -222,7 +222,7 @@ public class RtcLogin{
             jargs.put(RtcConst.kAccUser,sname); //号码
             jargs.put(RtcConst.kAccType,RtcConst.UEType_Current);//终端类型
             jargs.put(RtcConst.kAccSrtp, 2);
-            jargs.put(RtcConst.kAccRetry, 180);
+            jargs.put(RtcConst.kAccRetry, 60);
             
             mAcc = mClt.createDevice(jargs.toString(), mAListener); //注册
 

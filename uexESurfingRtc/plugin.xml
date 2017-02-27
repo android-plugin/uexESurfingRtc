@@ -19,5 +19,14 @@
         <method name="rotateCamera"/>
         <method name="switchView"/>
         <method name="hideLocalView"/>
+        <method name="groupCreate"/>
+        <method name="groupMember"/>
+        <method name="groupInvite"/>
+        <method name="groupList"/>
+        <method name="groupJoin"/>
+        <method name="groupKick"/>
+        <method name="groupClose"/>
+        <method name="groupVideo"/>
+        <method name="groupMic"/>
     </plugin>
 </uexplugins>

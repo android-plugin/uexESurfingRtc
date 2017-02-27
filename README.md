@@ -68,7 +68,8 @@ uexESurfingRtc.setAppKeyAndAppId(appKey, appId);
 
 **说明:**
 
-初始化RTC 客户端,并注册至RTC平台接口,回调方法[cbLogStatus](#-cblogstatus-)
+初始化RTC客户端,并注册至RTC平台接口,回调方法[cbLogStatus](#-cblogstatus-)
+登录成功后可以继续调用此接口设置视频窗口尺寸
 
 **参数:**
 
@@ -236,7 +237,7 @@ uexESurfingRtc.hangUp();
 
 **说明:**
 
-设置静音/取消静音接口
+设置静音/取消静音接口，支持点对点和多人通话
 
 **参数:**
 
@@ -264,7 +265,7 @@ uexESurfingRtc.mute("true");
 
 **说明:**
 
-设置扬声器/电话听筒接口
+设置扬声器/电话听筒接口，支持点对点和多人通话
 
 **参数:**
 
@@ -320,7 +321,8 @@ uexESurfingRtc.setVideoAttr(videoAttr);
 
 **说明:**
 
-截屏接口,截取远程视频的图像,回调方法[cbRemotePicPath](#-cbremotepicpath-) 
+截屏接口,截取远程视频的图像,回调方法[cbRemotePicPath](#-cbremotepicpath-)
+支持点对点和多人通话 
 截屏图片,在Android系统中以“png”格式保存在本地,目录为:根目录/appName/photo/,appName为应用的名称.
 	图片以时间点命名,如20150520161035.png.
 在iOS系统中保存在相册中。
@@ -379,7 +381,7 @@ uexESurfingRtc.sendMessage(userName, msg);
 
 **说明:**
 
-切换摄像头
+切换摄像头，支持点对点和多人通话
 
 **参数:**
 
@@ -408,7 +410,7 @@ uexESurfingRtc.switchCamera("back");
 
 **说明:**
 
-旋转摄像头
+旋转摄像头，支持点对点和多人通话
 
 **参数:**
 
@@ -501,7 +503,7 @@ param为json字符串。
 
 |  参数名称 | 参数类型  | 是否必选  |  说明 |
 | ------------ | ------------ | ------------ | ------------ |
-| members | String | 是 | 参会成员账号，多个账号之间以英文逗号隔开，发起人账号要放在第一个，不能为空。账号不可包含“~”、"-"、空格、中文字符 |
+| members | String | 是 | 参会成员账号，多个账号之间以英文逗号隔开，发起人账号不用传入，不能为空。账号不可包含“~”、"-"、空格、中文字符 |
 | groupType | Number | 是 | 会议类型。取值如下：0：多人语音群聊，每个成员均为可发言状态；1：多人语音对讲，创建后所有成员默认为禁言状态，均需抢麦才可发言；2：多人两方语音，此类型下发起方默认是非禁言状态，其他成员默认为禁言状态，需要主持人给麦才可发言；9：多人语音微直播，此类型下发起方默认是作为多人语音直播方的，并且其他成员默认均为禁言状态；20：多人视频群聊(语音+视频)；21：多人视频对讲(语音+视频)；22：多人两方视频(语音+视频)；29：多人视频微直播，此类型下发起方默认是作为多人视频直播方的，并且其他成员默认为只接收状态； |
 | groupName | String | 是 | 群组名称 |
 | passWord | String | 是 | 自定义的会议密码 |
@@ -738,9 +740,6 @@ param为json字符串。
 | ------------ | ------------ | ------------ | ------------ |
 | screenSplit | Number | 否 | 分屏数量，默认为0。0：由多人服务器自行设置分屏数量。1：1x1，2：1x2，3：2x2，4：2x3，5：3x3|
 | lv | Number | 否 | 是否启用语音激励，默认为0。0：不启用，1：启用|
-| mode | Number | 否 | 成员位置设置，默认为0。0：不设置，1：把memberToSet用户移出显示画面，并由memberToShow用户代替，2：把memberToSet用户设置为最大|
-| memberToSet | String | 否 | 当mode值为1或2时，才需传入此参数|
-| memberToShow | String | 否 | 当mode值为1时，才需传入此参数|
 
 **平台支持:**
 
@@ -774,7 +773,7 @@ uexESurfingRtc.groupVideo(JSON.stringify(param));
 | ----- | ----- | ----- | ----- |
 | opId | Number | 是 |  操作ID,在此函数中不起作用,可忽略 |
 | dataType| Number | 是 | 数据类型String标识,可忽略 |
-| data | String | 是 | 返回客户端实时状态，详情如下：<br>"ClientListener:onInit,result=":result为初始化结果<br>"获取token: reason:":获取token结果，reason为失败原因<br>  "DeviceListener:onNewCall,call=":有新来电，call为来电信息，其中"ci"为对方携带的呼叫信息，"t"为呼叫类型（1：音频，3：音+视频），"dir"为呼叫方向（1：去电，2：来电），"uri"为对方账号<br>       "ConnectionListener:onConnecting":通话请求连接中<br>       "ConnectionListener:onConnected":通话已接通<br>"ConnectionListener:onVideo":通话接通后，媒体建立成功<br>"ConnectionListener:onDisconnect,code=":通话连接中断，code为错误码<br>"StateChanged,result=200":登录成功<br>    "StateChanged,result=-1001":没有网络<br>      "StateChanged,result=-1002":切换网络<br>       "StateChanged,result=-1003":网络较差<br>       "StateChanged,result=-1004":重连失败需要重新登录<br>       "StateChanged,result=-1500":同一账号在多个终端登录被踢下线<br>       "StateChanged,result=-1501":同一账号在多个设备类型登录<br>"call hangup":主动挂断 <br>"onReceiveIm:from:,msg:":接收到文本消息，from为发送账号，msg为消息内容<br>"APNs:xxx":仅适用于iOS，xxx为推送内容。以下三种情况会触发此回调。a)当应用未启动的情况下收到通知后，点击或滑动通知会触发应用启动，并触发回调；b)当应用在前台运行的情况下收到来电，不会弹出通知，但会触发回调；c)当应用在后台运行的情况下收到通知后，点击或滑动通知会进入应用，并触发回调。 |
+| data | String | 是 | 返回客户端实时状态，详情如下：<br>"ClientListener:onInit,result=":result为初始化结果<br>"获取token: reason:":获取token结果，reason为失败原因<br>  "DeviceListener:onNewCall,call=":有新来电，call为来电信息，其中"ci"为对方携带的呼叫信息，"t"为呼叫类型（1：音频，3：音+视频），"dir"为呼叫方向（1：去电，2：来电），"uri"为对方账号<br>"DeviceListener:rejectIncomingCall call=":当前已处在通话中，拒绝新的点对点来电，call为来电信息，其中"ci"为对方携带的呼叫信息（即callInfo参数），"t"为呼叫类型（1：音频，3：音+视频），"dir"为呼叫方向（1：去电，2：来电），"uri"为对方账号<br>       "ConnectionListener:onConnecting":通话请求连接中<br>       "ConnectionListener:onConnected":通话已接通<br>"ConnectionListener:onVideo":通话接通后，媒体建立成功<br>"ConnectionListener:onDisconnect,code=":通话连接中断，code为错误码<br>"StateChanged,result=200":登录成功<br>    "StateChanged,result=-1001":没有网络<br>      "StateChanged,result=-1002":切换网络<br>       "StateChanged,result=-1003":网络较差<br>       "StateChanged,result=-1004":重连失败需要重新登录<br>       "StateChanged,result=-1500":同一账号在多个终端登录被踢下线<br>       "StateChanged,result=-1501":同一账号在多个设备类型登录<br>"call hangup":主动挂断 <br>"onReceiveIm:from:,msg:":接收到文本消息，from为发送账号，msg为消息内容<br>"APNs:xxx":仅适用于iOS，xxx为推送内容。以下三种情况会触发此回调。a)当应用未启动的情况下收到通知后，点击或滑动通知会触发应用启动，并触发回调；b)当应用在前台运行的情况下收到来电，不会弹出通知，但会触发回调；c)当应用在后台运行的情况下收到通知后，点击或滑动通知会进入应用，并触发回调。 |
 
 **版本支持:**
 
@@ -914,7 +913,7 @@ function updateMessageStatus(opCode, dataType, data){
 | ------------ | ------------ | ------------ | ------------ |
 | opId | Number | 是 |  操作ID，在此函数中不起作用，可忽略 |
 | dataType| Number | 是 | 数据类型String标识，可忽略 |
-| data | String | 是 | 返回客户端注册至RTC平台的结果，详情如下：<br>“onNewGroupCall,call={"callid":"xx","name":"xx","type"=xx}”：有会议来电，json参数分别表示callid、群组名、会议类型<br>“statusChangedInfo={"uri":"xx","status":xx}”：某个成员在会状态发生变化，uri表示号码，status表示状态<br>“micChangedInfo={"uri":"xx","da":xx,"dv":xx,"ua":xx,"uv":xx}”：某个成员麦克状态发生变化，uri表示号码，da表示下行音频状态，dv表示下行视频状态，ua表示上行音频状态，uv表示上行视频状态<br>“OK:groupCreate,callid="xx"”：创建会议成功，返回callid<br>“OK:groupMember,list="xx","xx"...”：查询成员成功，返回成员号码<br>“OK:groupInvite”：邀请成员成功，被邀请成员会收到来电请求<br>“OK:groupKick”：踢出成员成功<br>“OK:groupList,list={"callid":"xx","name":"xx"},{"callid":"xx","name":"xx"}...”：获取会议列表成功，返回callid和群组名<br>“OK:noGroupList”：当前appid没有会议<br>“OK:groupJoin”：加入会议成功<br>“OK:groupClose”：关闭会议成功<br>“OK:groupMic”：操作麦克成功<br>“OK:groupVideo”：操作画面成功<br>“ERROR:PARM_ERROR”：参数有误，调用接口失败<br>“ERROR:UNCALL”：未创建呼叫，不能操作此接口<br>“ERROR:UNREGISTER”：未注册至RTC平台<br>“ERROR:groupCreate,code=xx”：创建会议失败，返回错误码code<br>“ERROR:groupMember,code=xx”：查询成员失败，返回错误码code<br>“ERROR:groupInvite,code=xx”：邀请成员失败，返回错误码code<br>“ERROR:groupKick,code=xx”：踢出成员失败，返回错误码code<br>“ERROR:groupJoin,code=xx”：加入会议失败，返回错误码code<br>“ERROR:groupClose,code=xx”：关闭会议失败，返回错误码code<br>“ERROR:groupMic,code=xx”：操作麦克失败，返回错误码code<br>“ERROR:groupVideo,code=xx”：操作画面失败，返回错误码code|
+| data | String | 是 | 返回客户端注册至RTC平台的结果，详情如下：<br>“onNewGroupCall,call={"callid":"xx","name":"xx","type"=xx}”：有会议来电，json参数分别表示callid、群组名、会议类型<br>“rejectIncomingCall,call={"callid":"xx","name":"xx","type"=xx}”：当前已在通话中，拒绝新的多人来电，json参数分别表示callid、群组名、会议类型<br>“statusChangedInfo={"appAccountID":"xx","memberStatus":xx}”：某个成员在会状态发生变化，appAccountID表示号码，memberStatus表示在会状态（1：准备状态，2：已加入，3：未加入，4：被踢出，5：正在振铃）<br>“micChangedInfo={"appAccountID":"xx","downAudioState":xx,"downVideoState":xx,"upAudioState":xx,"upVideoState":xx}”：某个成员麦克状态发生变化，appAccountID表示号码，downAudioState表示下行音频状态，downVideoState表示下行视频状态，upAudioState表示上行音频状态，upVideoState表示上行视频状态，上下行状态分为0（关闭）、1（开启）<br>“OK:groupCreate,callid="xx"”：创建会议成功，返回callid<br>“OK:groupMember,list={"appAccountID":"xx","memberStatus":"xx","role":"xx","startTime":"xx","downAudioState":"xx","downVideoState":"xx","upAudioState":"xx","upVideoState":"xx"},...”：查询成员成功，返回json数组，appAccountID表示成员账号，memberStatus表示在会状态（1：准备状态，2：已加入，3：未加入，4：被踢出，5：正在振铃），role表示成员身份（0：普通参会者，1：创建者），startTime表示加入会议时间（格式为“年月日时分秒”）<br>“OK:groupInvite”：邀请成员成功，被邀请成员会收到来电请求<br>“OK:groupKick”：踢出成员成功<br>“OK:groupList,list={"callid":"xx","name":"xx"},{"callid":"xx","name":"xx"}...”：获取会议列表成功，json数组，返回callid和群组名<br>“OK:noGroupList”：当前appid没有会议<br>“OK:groupJoin”：加入会议成功<br>“OK:groupClose”：关闭会议成功<br>“OK:groupMic”：操作麦克成功<br>“OK:groupVideo”：操作画面成功<br>“ERROR:PARM_ERROR”：参数有误，调用接口失败<br>“ERROR:INVALID_OPERATION”：正在发起或已在通话中<br>“ERROR:UNREGISTER”：未注册至RTC平台<br>“ERROR:groupCreate,code=xx”：创建会议失败，返回错误码code<br>“ERROR:groupMember,code=xx”：查询成员失败，返回错误码code<br>“ERROR:groupInvite,code=xx”：邀请成员失败，返回错误码code<br>“ERROR:groupKick,code=xx”：踢出成员失败，返回错误码code<br>“ERROR:groupJoin,code=xx”：加入会议失败，返回错误码code<br>“ERROR:groupClose,code=xx”：关闭会议失败，返回错误码code<br>“ERROR:groupMic,code=xx”：操作麦克失败，返回错误码code<br>“ERROR:groupVideo,code=xx”：操作画面失败，返回错误码code|
 
 **版本支持:**
 
@@ -933,12 +932,20 @@ function updateGroupStatus(opCode, dataType, data){
 
 ###### **3.1、后台长连接**<ignore>
 为保证iOS终端在后台能维持长连接，请在config文件中配置后台模式。
+应用配置voip后，上架AppStore时需要提供后台接听的演示视频，并备注后台接听的操作步骤，以免上架被拒。
 
 ````
 <config desc="backgroundConfig" type="AUTHORITY">
-      <permission platform="iOS" info="backgroundMode" flag="5"/>
+      <permission platform="iOS" info="backgroundMode" flag="389"/>
 </config>
 ````
+
+注：flag的值为以下四项相加，更多含义见官网开发指导中的config·xml配置说明。
+1	<string>audio</string>	后台音乐播放
+4	<string>voip</string>	后台VoIP服务
+128	<string>fetch</string>	后台下载内容
+256	<string>remote-notification</string>	通过点击推送消息后台下载内容
+
 ###### **3.2、log开关**<ignore>
 iOS支持log开关，$uexESurfingRtc_enablelog$表示是否允许生成log。value值为“1”时表示打印log，“0”为关闭，不配置则默认关闭。开启后会在控制台输出RTC的log信息，并且保存在应用沙盒内的tmp文件夹下。此功能只为了方便开发者调试，正式发布时必须关闭log。
 

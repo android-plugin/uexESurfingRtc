@@ -3,7 +3,7 @@
 	<plugin
         className="org.zywx.wbpalmstar.plugin.uexesurfingrtc.EUExesurfingRtc" 
         uexName="uexESurfingRtc"
-        global="true" >
+        global="false" >
         <method name="setAppKeyAndAppId"/>
         <method name="login"/>
         <method name="logout"/>
@@ -18,5 +18,15 @@
         <method name="switchCamera"/>
         <method name="rotateCamera"/>
         <method name="switchView"/>
+        <method name="hideLocalView"/>
+        <method name="groupCreate"/>
+        <method name="groupMember"/>
+        <method name="groupInvite"/>
+        <method name="groupList"/>
+        <method name="groupJoin"/>
+        <method name="groupKick"/>
+        <method name="groupClose"/>
+        <method name="groupVideo"/>
+        <method name="groupMic"/>
     </plugin>
 </uexplugins>

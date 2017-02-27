@@ -1,0 +1,213 @@
+
+
+
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport"
+            content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+            <link rel="stylesheet" type="text/css" href="css/index.css">
+
+                                        <script type="text/javascript">
+
+                                        var muteStr = "Mute";
+                                        var unmuteStr = "Unmute";
+                                        var loudSpeakerStr = "LoudSpeaker";
+                                        var phoneSpeakerStr = "PhoneSpeaker";
+                                        var switchCStr = "front";
+                                        var rotateStr = 0;
+                                        var hideVStr = "show";
+
+                                        function groupCreate(){
+                                            var memberName = document.getElementById("memberName").value;
+                                            var gType = document.getElementById("groupType").value;
+                                            var param = {
+                                                members:memberName,
+                                                groupType:gType,
+                                                groupName:"myGroup",
+                                                passWord:"123456"
+                                            };
+                                            uexESurfingRtc.groupCreate(JSON.stringify(param));
+                                        }
+                                        
+                                        function acceptcall2(){
+                                            var callType = document.getElementById("callType").value;
+                                            uexESurfingRtc.acceptCall(callType);
+                                        }
+
+                                        function groupInvite(){
+                                            var memberName = document.getElementById("memberName").value;
+                                            uexESurfingRtc.groupInvite(memberName);
+                                        }
+                                        
+                                        function groupKick(){
+                                            var memberName = document.getElementById("memberName").value;
+                                            uexESurfingRtc.groupKick(memberName);
+                                        }
+                                        
+                                        function groupJoin(){
+                                            var id = document.getElementById("callid").value;
+                                            uexESurfingRtc.groupJoin(id,"123456");
+                                        }
+      
+                                         function groupMic(){
+                                            var memberName = document.getElementById("memberName").value;
+                                            var up = document.getElementById("up").value;
+                                            var down = document.getElementById("down").value;
+                                            uexESurfingRtc.groupMic(memberName,up,down);
+                                        }
+                                        
+                                        function groupVideo(){
+                                            var split = document.getElementById("split").value;
+                                            var lv = document.getElementById("lv").value;
+                                            var param = {
+                                                screenSplit:split,
+                                                lv:lv
+                                            };
+                                            uexESurfingRtc.groupVideo(JSON.stringify(param));
+                                        }
+                                        
+                                        function back2(){
+                                            uexWindow.close();
+                                        }
+                                        
+                                        function mute(){
+                                            var status = document.getElementById("muteBtn").value;
+                                            if(muteStr == status)
+                                            {
+                                                uexESurfingRtc.mute("true");
+                                                document.getElementById("muteBtn").value = unmuteStr;
+                                            }
+                                            else if(unmuteStr == status)
+                                            {
+                                                uexESurfingRtc.mute("false");
+                                                document.getElementById("muteBtn").value = muteStr;
+                                            }
+                                        }
+                                        
+                                        function loudSpeaker(){
+                                            var status = document.getElementById("loudSpeakerBtn").value;
+                                            if(loudSpeakerStr == status)
+                                            {
+                                                uexESurfingRtc.loudSpeaker("true");
+                                                document.getElementById("loudSpeakerBtn").value = phoneSpeakerStr;
+                                            }
+                                            else if(phoneSpeakerStr == status)
+                                            {
+                                                uexESurfingRtc.loudSpeaker("false");
+                                                document.getElementById("loudSpeakerBtn").value = loudSpeakerStr;
+                                            }
+                                        }
+                                        
+                                        function switchCamera(){
+                                            if(switchCStr == "front")
+                                            {
+                                                uexESurfingRtc.switchCamera("back");
+                                                switchCStr = "back";
+                                            }
+                                            else if(switchCStr == "back")
+                                            {
+                                                uexESurfingRtc.switchCamera("front");
+                                                switchCStr = "front";
+                                            }
+                                        }
+                                        
+                                        function rotateCamera(){
+                                            rotateStr++;
+                                            if(rotateStr>3)
+                                            rotateStr = 0;
+                                            uexESurfingRtc.rotateCamera(rotateStr);
+                                        }
+                                        
+                                        function hideLocalView(){
+                                            if(hideVStr == "show")
+                                            {
+                                                uexESurfingRtc.hideLocalView("hide");
+                                                hideVStr = "hide";
+                                            }
+                                            else if(hideVStr == "hide")
+                                            {
+                                                uexESurfingRtc.hideLocalView("show");
+                                                hideVStr = "show";
+                                            }
+                                        }
+                                        
+                                            </script>
+                                        </head>
+    
+    <body class="um-vp" ontouchstart>
+        <div id="page_0" class="up ub ub-ver bc-bg" tabindex="0">
+            <!--header开始-->
+            <div id="header" class="uh bc-text-head ub bc-head">
+                <div class="tit">tyRTC</div>
+            </div>
+            <div class="conbor">
+                <div class="consj">
+                    
+                    <input class="btn" type="button" id="backBtn" value="back" onclick="back2();"><br><br>
+                        <span>成员账号,多个号码以英文逗号分隔</span>
+                        <span>(创建/邀请/踢出/麦克管理)</span>
+                        <input class="textbox" type="text" id="memberName" value=""><br><br>
+                            
+                        <span>1.groupCreate接口</span>
+                        <span>会议类型</span>
+                        <input class="textbox" type="number" id="groupType" value="20">
+                        <input class="btn" type="button" id="groupCreateBtn" value="groupCreate" onclick="groupCreate();"><br><br>
+    
+                                <span>2.acceptCall接口</span>
+                                <span>接听类型</span>
+                                <input class="textbox" type="number" id="callType" value="2">
+                                <input class="btn" type="button" id="acceptBtn" value="Accept" onclick="acceptcall2();"><br><br>
+                                    
+                                    <span>3.hangUp接口</span>
+                                    <input class="btn" type="button" id="hangUpBtn" value="Hangup" onclick="uexESurfingRtc.hangUp();"><br><br>
+                                        
+                                        <span>4.groupClose接口</span>
+                                        <input class="btn" type="button" id="groupCloseBtn" value="groupClose" onclick="uexESurfingRtc.groupClose();"><br><br>
+                                            
+                                            <span>5.groupMember接口</span>
+                                            <input class="btn" type="button" id="groupMemberBtn" value="groupMember" onclick="uexESurfingRtc.groupMember();"><br><br>
+                                                
+                                                <span>6.groupInvite接口</span>
+                                                <input class="btn" type="button" id="groupInviteBtn" value="groupInvite" onclick="groupInvite();"><br><br>
+                                                            
+                                                    <span>7.groupKick接口</span>
+                                                    <input class="btn" type="button" id="groupKickBtn" value="groupKick" onclick="groupKick();"><br><br>
+                                       
+                                                        <span>8.groupMic接口</span>
+                                                        <span>上行</span>
+                                                        <input class="textbox" type="number" id="up" value="">
+                                                        <span>下行</span>
+                                                        <input class="textbox" type="number" id="down" value="">
+                                                        <input class="btn" type="button" id="groupMicBtn" value="groupMic" onclick="groupMic();"><br><br>
+                                                            
+                                                            <span>9.groupVideo接口</span>
+                                                            <span>分屏</span>
+                                                            <input class="textbox" type="number" id="split" value="">
+                                                            <span>激励</span>
+                                                            <input class="textbox" type="number" id="lv" value="">
+                                                            <input class="btn" type="button" id="groupVideoBtn" value="groupVideo" onclick="groupVideo();"><br><br>
+                                                    
+                                                                <span>10.groupList接口</span>
+                                                                <input class="btn" type="button" id="groupListBtn" value="groupList" onclick="uexESurfingRtc.groupList();"><br><br>
+                                                                    
+                                                                    <span>11.groupJoin接口</span>
+                                                                    <span>callid</span>
+                                                                    <input class="textbox" type="text" id="callid" value="">
+                                                                    <input class="btn" type="button" id="groupJoinBtn" value="groupJoin" onclick="groupJoin();"><br><br>
+                                                            
+                                                            <span></span>
+                                                            <input class="btn" type="button" id="muteBtn" value="Mute" onclick="mute();">
+                                                                <input class="btn" type="button" id="loudSpeakerBtn" value="LoudSpeaker" onclick="loudSpeaker();">
+                                                                    <input class="btn" type="button" id="picPathBtn" value="截屏" onclick="api.require('tyRTC').takeRemotePicture();">
+                                                                        <input class="btn" type="button" id="switchCBtn" value="switchCamera" onclick="switchCamera();">
+                                                                            <input class="btn" type="button" id="rotateBtn" value="rotateCamera" onclick="rotateCamera();">
+                                                                                <input class="btn" type="button" id="hideVBtn" value="hideLocalView" onclick="hideLocalView();">
+                                                                                    <br>
+                                                                                    <br>
+                     </div>
+            </div>
+        </div>
+    </body>
+</html>

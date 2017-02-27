@@ -2,10 +2,10 @@
 <uexplugins>
    <!-- plugin uexESurfingRtc -->
     <plugin
-        uexName="uexESurfingRtc" version="3.1.9" build="9">
-	<info>同步最新引擎解决多页面视频画面问题
-	      同步原生sdk优化视频
+        uexName="uexESurfingRtc" version="3.1.10" build="10">
+	<info>增加多人业务接口，修复bug
 	</info>
+	<build>9:同步最新引擎解决多页面视频画面问题、同步原生sdk优化视频</build>
 	<build>8:增加隐藏本地预览接口、同步原生sdk优化视频</build>
 	<build>7:增加前后摄像头切换、摄像头旋转、窗口交换接口；呼叫接口增加参数</build>
 	<build>6:支持单例，全部回调到root页、增加文本聊天接口、完善事件通知、调整callType的值</build>

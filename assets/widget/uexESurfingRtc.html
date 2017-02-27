@@ -1,12 +1,18 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="css/index.css">
-	
-	<script type="text/javascript">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" href="css/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+    <link rel="stylesheet" href="css/appcan.icon.css">
+    <link rel="stylesheet" href="css/appcan.control.css">
+    <script src="js/appcan.js"></script>
+    <script type="text/javascript">
     var callBtnTexNormal = "Call";
     var callBtnTexIncoming = "Accept";
     var callBtnTexCalling = "Calling";
@@ -14,13 +20,27 @@
     var unmuteStr = "Unmute";
     var loudSpeakerStr = "LoudSpeaker";
     var phoneSpeakerStr = "PhoneSpeaker";
+    var switchCStr = "front";
+    var rotateStr = 0;
+    var hideVStr = "show";
 
-	function upgateGlobalStatus(opId, dataType, data){
-		alert(data);
-		document.getElementById('globalStatus').innerHTML = data;
-	}
-	
-	function upgateLogStatus(opId, dataType, data){
+    function updateGlobalStatus(opCode, dataType, data){
+        //alert(data);
+        document.getElementById('globalStatus').innerHTML = data;
+        /*if("ConnectionListener:onVideo" == data.substring(10,36))
+        {
+            appcan.frame.open({
+             id:'page2',
+             url:'page2.html',
+             top:100,
+             left:100
+             });
+        }*/
+    }
+    
+    function updateLogStatus(opCode, dataType, data){
+         //alert(data);
+         document.getElementById('globalStatus').innerHTML = data;
         if("OK" == data.substring(0,2))
         {
             var status = data.split("OK:")[1];
@@ -39,9 +59,11 @@
         {
             alert(data);
         }
-	}
-	
-    function updateCallStatus(opId, dataType, data){
+    }
+    
+    function updateCallStatus(opCode, dataType, data){
+         //alert(data);
+         document.getElementById('globalStatus').innerHTML = data;
         if("OK" == data.substring(0,2))
         {
             var status = data.split("OK:")[1];
@@ -49,6 +71,8 @@
             if("NORMAL" == status)
             {
                 showStr = callBtnTexNormal;
+                switchCStr = "front";
+                rotateStr = 0;
             }
             else if("INCOMING" == status)
             {
@@ -66,24 +90,42 @@
         }
     }
     
-    function showRemotePicPath(opId, dataType, data){
+    function showRemotePicPath(opCode, dataType, data){
         document.getElementById('remotePicPathTx').innerHTML = data;
     }
-    
-    function upgateMessageStatus(opId, dataType, data){
+
+    function updateMessageStatus(opCode, dataType, data){
         alert(data);
     }
-
-
-	window.uexOnload = function(type){
-		if(type == 0){  
-			uexESurfingRtc.onGlobalStatus = upgateGlobalStatus;
-			uexESurfingRtc.cbLogStatus = upgateLogStatus;
-			uexESurfingRtc.cbCallStatus = updateCallStatus;
-			uexESurfingRtc.cbRemotePicPath = showRemotePicPath;
-			uexESurfingRtc.cbMessageStatus = upgateMessageStatus;
-		}
-	}
+    
+    function updateGroupStatus(opCode, dataType, data){
+        alert(data);
+        
+        /*if("OK:groupMember,list=" == data.substring(0,20))
+        {
+            var jsonStr = data.split("OK:groupMember,list=")[1];
+            var jsonO = eval("("+jsonStr+")");
+            alert(jsonO[0].appAccountID);
+        }
+        else if("OK:groupList,list=" == data.substring(0,18))
+        {
+            var jsonStr = data.split("OK:groupList,list=")[1];
+            var jsonO = eval("("+jsonStr+")");
+            alert(jsonO[0].callid);
+        }*/
+    }
+    
+    window.uexOnload = function(type){
+        if(type == 0){
+            uexESurfingRtc.onGlobalStatus = updateGlobalStatus;
+            uexESurfingRtc.cbLogStatus = updateLogStatus;
+            uexESurfingRtc.cbCallStatus = updateCallStatus;
+            uexESurfingRtc.cbGroupStatus = updateGroupStatus;
+            uexESurfingRtc.cbRemotePicPath = showRemotePicPath;
+            uexESurfingRtc.cbMessageStatus = updateMessageStatus;
+            uexESurfingRtc.setAppKeyAndAppId("0", "0");
+          }
+    }
     
     function logResponse(){
         var status = document.getElementById("logBtn").value;
@@ -101,10 +143,10 @@
         var status = document.getElementById("callBtn").value;
         var callType = document.getElementById("callType").value;
         var calledUserName = document.getElementById("calledUserName").value;
-		var callInfo = document.getElementById("callInfo").value;
+        var callInfo = document.getElementById("callInfo").value;
         if(callBtnTexNormal == status)
         {
-            uexESurfingRtc.call(callType, calledUserName, callInfo);
+            uexESurfingRtc.call(callType, calledUserName);
         }
         else if(callBtnTexIncoming == status)
         {
@@ -156,42 +198,22 @@
         var w2 = document.getElementById("width2").value;
         var h2 = document.getElementById("hight2").value;
         
-        var jsonObj1 = {};
-        jsonObj1.x = x1;
-        jsonObj1.y = y1;
-        jsonObj1.w = w1;
-        jsonObj1.h = h1;
-        var jsonObj2 = {};
-        jsonObj2.x = x2;
-        jsonObj2.y = y2;
-        jsonObj2.w = w2;
-        jsonObj2.h = h2;
-        var json = {};
-        json.localView = jsonObj1;
-        json.remoteView = jsonObj2;
-        
-       /* var json = {
-        
-            localView: {"x":"10", "y":"10", "w":"10", "h":"10"},
-            remoteView: {"x":"10", "y":"10", "w":"10", "h":"10"}
-        
+        var json = {
+            localView:{
+                x:x1,
+                y:y1,
+                w:w1,
+                h:h1
+            },
+            remoteView:{
+                x:x2,
+                y:y2,
+                w:w2,
+                h:h2
+            }
         };
-        
-        json.localView.x = x1;
-        json.localView.y = y1;
-        json.localView.w = w1;
-        json.localView.h = h1;
-        
-        json.remoteView.x = x2;
-        json.remoteView.y = y2;
-        json.remoteView.w = w2;
-        json.remoteView.h = h2;*/
-        
-        //var jsonStr = '{"localView" : {"x":"10", "y":"800", "w":"432", "h":"528"}, "remoteView" : {"x":"440", "y":"800", "w":"432", "h":"528"}}';
-        var jsonStr = JSON.stringify(json);
-        var jsonAdd = '{"x":"10", "y":"10", "w":"10", "h":"10"}';
         var userName = document.getElementById("userName").value;
-        uexESurfingRtc.login(jsonStr, userName);
+        uexESurfingRtc.login(JSON.stringify(json), userName);
     }
     
     function setVideoAttr(){
@@ -199,137 +221,160 @@
         uexESurfingRtc.setVideoAttr(videoAttr);
     }
     
-    function takeRemotePicture(){
-        uexESurfingRtc.takeRemotePicture();
-    }
-    
     function sendMsg(){
         var calledUserName = document.getElementById("calledUserName").value;
         var message = document.getElementById("message").value;
         uexESurfingRtc.sendMessage(calledUserName, message);
     }
-
-    function switchCam(){
-        var camera = document.getElementById("switchCamera").value;
-        if(camera == "back")
-            document.getElementById("switchCamera").value = "front";
-        else if(camera == "front")
-            document.getElementById("switchCamera").value = "back";
-        uexESurfingRtc.switchCamera(camera);
+    
+    function switchCamera(){
+        if(switchCStr == "front")
+        {
+            uexESurfingRtc.switchCamera("back");
+            switchCStr = "back";
+        }
+        else if(switchCStr == "back")
+        {
+            uexESurfingRtc.switchCamera("front");
+            switchCStr = "front";
+        }
     }
-
-    function rotateCam(){
-        var angle = document.getElementById("angle").value;
-        uexESurfingRtc.rotateCamera(angle);
+    
+    function rotateCamera(){
+        rotateStr++;
+        if(rotateStr>3)
+        rotateStr = 0;
+        uexESurfingRtc.rotateCamera(rotateStr);
     }
-
+    
     function hideLocalView(){
-        var set = document.getElementById("hideLocalView").value;
-        if(set == "hide")
-            document.getElementById("hideLocalView").value = "show";
-        else if(set == "show")
-            document.getElementById("hideLocalView").value = "hide";
-        uexESurfingRtc.hideLocalView(set);
+        if(hideVStr == "show")
+        {
+            uexESurfingRtc.hideLocalView("hide");
+            hideVStr = "hide";
+        }
+        else if(hideVStr == "hide")
+        {
+            uexESurfingRtc.hideLocalView("show");
+            hideVStr = "show";
+        }
     }
-//uexWindow.open('', '0', 'video.html', 1, 0, 0, 0, 500);
+    
+    function openGroupPage()
+    {
+        appcan.window.open({
+                       name:'Groupdemo',
+                       data:'Groupdemo.html',
+                       dataType:0
+                       });
+    }
+    
 </script>
 </head>
 
-<body>
-	<div class="tit">uexESurfingRtc</div>
-	<div class="conbor">
-		<div class="consj">
+<body class="um-vp" ontouchstart>
+    <div id="page_0" class="up ub ub-ver bc-bg" tabindex="0">
+        <!--header开始-->
+        <div id="header" class="uh bc-text-head ub bc-head">
+            <div class="tit">天翼通话Demo</div>
+        </div>
+        <div class="conbor">
+            <div class="consj">
+                <span>状态</span>
+                <div class="tcxx" id="globalStatus"></div>
 
-            <input class="btn" type="button" id="openWindowBtn" value="打开video页" onclick="uexWindow.open('callUser','0','video.html','0','0','0','0','200');"><br><br>
+                <span>1.设置appKey、AppId接口</span>
+                <span>appKey</span>
+                <input class="textbox" type="text" id="AppKeytb" value="MTQzMTQyNTM2MzA4NQ==">
+                <span>AppId</span>
+                <input class="textbox" type="text" id="AppIdtb" value="70063">
+                <input class="btn" type="button" id="setAppKeyIdBtn" value="确定" onclick="setAppKeyAndAppId();">
+                <br>
+                <br>
 
-            <span>状态</span>
-            <div class="tcxx" id="globalStatus"></div>
-            
-            <span>1.设置appKey、AppId接口</span>
-            <span>appKey</span>
-            <input class="textbox" type="text" id="AppKeytb" value="MTQzMTQyNTM2MzA4NQ==">
-            <span>AppId</span>
-            <input class="textbox" type="text" id="AppIdtb" value="70063">
-            <input class="btn" type="button" id="setAppKeyIdBtn" value="确定" onclick="setAppKeyAndAppId();"><br><br>
-		
-            <span>2.Login/Logout接口</span>
-			
-            <span>x1</span>
-            <input class="textbox" type="number" id="axis1" value="10">
-            <span>y1</span>
-            <input class="textbox" type="number" id="ordinate1" value="80">
-            <span>width1</span>
-            <input class="textbox" type="number" id="width1" value="432">
-            <span>hight1</span>
-            <input class="textbox" type="number" id="hight1" value="528">
-            
-            <span>x2</span>
-            <input class="textbox" type="number" id="axis2" value="10">
-            <span>y2</span>
-            <input class="textbox" type="number" id="ordinate2" value="80">
-            <span>width2</span>
-            <input class="textbox" type="number" id="width2" value="864">
-            <span>hight2</span>
-            <input class="textbox" type="number" id="hight2" value="1056">
-			
-            <!--<span>x</span>
-            <input class="textbox" type="number" id="axis" value="10">
-            <span>y</span>
-            <input class="textbox" type="number" id="ordinate" value="10">
-            <span>width</span>
-            <input class="textbox" type="number" id="width" value="144">
-            <span>hight</span>
-            <input class="textbox" type="number" id="hight" value="176">-->
-			
-            <span>账号</span>
-            <input class="textbox" type="text" id="userName" value="1369">
-            <input class="btn" type="button" id="logBtn" value="Login" onclick="logResponse();"><br>
-            
-            <span>3.Call/acceptCall接口</span>
-            <span>呼叫类型</span>
-            <input class="textbox" type="number" id="callType" value="2">
-            <span>被叫</span>
-            <input class="textbox" type="text" id="calledUserName" value="1002">
-			<span>可选附加信息</span>
-            <input class="textbox" type="text" id="callInfo" value="逍遙神龍--->">
-            <input class="btn" type="button" id="callBtn" value="Call" onclick="callResponse();"><br>
-			
-            <span>4.hangUp接口</span>
-            <input class="btn" type="button" id="hangUpBtn" value="Hangup" onclick="uexESurfingRtc.hangUp();"><br>
-            
-            <span>5.mute接口</span>
-            <input class="btn" type="button" id="muteBtn" value="Mute" onclick="mute();"><br><br>
-            
-            <span>6.loudSpeaker接口</span>
-            <input class="btn" type="button" id="loudSpeakerBtn" value="LoudSpeaker" onclick="loudSpeaker();"><br>
-            
-            <span>7.设置视频清晰度接口（下次呼叫生效）</span>
-            <span>清晰度</span>
-            <input class="textbox" type="text" id="videoAttr" value="0">
-            <input class="btn" type="button" id="videoAttrBtn" value="SetVideoAttr" onclick="setVideoAttr();"><br>
-            
-            <span>8.截屏（Remote）接口</span>
-            <span>截屏图片路径</span>
-            <div class="tcxx" id="remotePicPathTx"></div>
-            <input class="btn" type="button" id="picPathBtn" value="TakeRemotePicture" onclick="uexESurfingRtc.takeRemotePicture();"><br>
-            
-            <span>9.文本消息接口</span>
-            <input class="textbox" type="text" id="message" value="来聊天吧@">
-            <input class="btn" type="button" id="sendMsgBtn" value="sendMessage" onclick="sendMsg();"><br>
-            
-            <span>10.摄像头切换</span>
-            <input class="btn" type="button" id="switchCamera" value="back" onclick="switchCam();"><br>
+                <span>2.Login/Logout接口</span>
 
-            <span>11.旋转摄像头</span>
-            <input class="textbox" type="text" id="angle" value=0>
-            <input class="btn" type="button" id="rotateCamera" value="RotateCamera" onclick="rotateCam();"><br>
-            
-            <span>12.画面交换</span>
-            <input class="btn" type="button" id="switchView" value="SwitchView" onclick="uexESurfingRtc.switchView();"><br>
-            
-            <span>13.隐藏本地窗口</span>
-            <input class="btn" type="button" id="hideLocalView" value="hide" onclick="hideLocalView();"><br>
-		</div>
-	</div>
+                <span>x1</span>
+                <input class="textbox" type="number" id="axis1" value="10">
+                <span>y1</span>
+                <input class="textbox" type="number" id="ordinate1" value="80">
+                <span>width1</span>
+                <input class="textbox" type="number" id="width1" value="190">
+                <span>hight1</span>
+                <input class="textbox" type="number" id="hight1" value="200">
+
+                <span>x2</span>
+                <input class="textbox" type="number" id="axis2" value="165">
+                <span>y2</span>
+                <input class="textbox" type="number" id="ordinate2" value="80">
+                <span>width2</span>
+                <input class="textbox" type="number" id="width2" value="150">
+                <span>hight2</span>
+                <input class="textbox" type="number" id="hight2" value="200">
+
+                <span>账号</span>
+                <input class="textbox" type="text" id="userName" value="">
+                <input class="btn" type="button" id="logBtn" value="Login" onclick="logResponse();">
+                    <input class="btn" type="button" id="groupBtn" value="Group" onclick="openGroupPage();">
+                        <input class="btn" type="button" id="setviewBtn" value="setView" onclick="login();">
+                <br>
+
+                <span>3.Call/acceptCall接口</span>
+                <span>呼叫类型</span>
+                <input class="textbox" type="number" id="callType" value="2">
+                <span>被叫</span>
+                <input class="textbox" type="text" id="calledUserName" value="">
+                <span>附加信息</span>
+                <input class="textbox" type="text" id="callInfo" value="helloRTC">
+                <input class="btn" type="button" id="callBtn" value="Call" onclick="callResponse();">
+                <br>
+
+                <span>4.hangUp接口</span>
+                <input class="btn" type="button" id="hangUpBtn" value="Hangup" onclick="uexESurfingRtc.hangUp();">
+                <br>
+
+                <span>5.mute接口</span>
+                <input class="btn" type="button" id="muteBtn" value="Mute" onclick="mute();">
+                <br>
+                <br>
+
+                <span>6.loudSpeaker接口</span>
+                <input class="btn" type="button" id="loudSpeakerBtn" value="LoudSpeaker" onclick="loudSpeaker();">
+                <br>
+
+                <span>7.设置视频清晰度接口（下次呼叫生效）</span>
+                <span>清晰度</span>
+                <input class="textbox" type="text" id="videoAttr" value="0">
+                <input class="btn" type="button" id="videoAttrBtn" value="确定" onclick="setVideoAttr();">
+                <br>
+
+                <span>8.截屏（Remote）接口</span>
+                <span>截屏图片路径</span>
+                <div class="tcxx" id="remotePicPathTx"></div>
+                <input class="btn" type="button" id="picPathBtn" value="截屏" onclick="uexESurfingRtc.takeRemotePicture();">
+                <br>
+
+                <span>9.文本消息接口</span>
+                <input class="textbox" type="text" id="message" value="来聊天吧@">
+                <input class="btn" type="button" id="sendMsgBtn" value="sendMessage" onclick="sendMsg();">
+                <br>
+
+                <span>10.switchCamera接口</span>
+                <input class="btn" type="button" id="switchCBtn" value="switchCamera" onclick="switchCamera();">
+                <br>
+
+                <span>11.rotateCamera接口</span>
+                <input class="btn" type="button" id="rotateBtn" value="rotateCamera" onclick="rotateCamera();">
+                <br>
+
+                <span>12.switchView接口</span>
+                <input class="btn" type="button" id="switchVBtn" value="switchView" onclick="uexESurfingRtc.switchView();">
+                <br>
+
+                <span>13.hideLocalView接口</span>
+                <input class="btn" type="button" id="hideVBtn" value="hideLocalView" onclick="hideLocalView();">
+                <br></div>
+        </div>
+    </div>
 </body>
 </html>

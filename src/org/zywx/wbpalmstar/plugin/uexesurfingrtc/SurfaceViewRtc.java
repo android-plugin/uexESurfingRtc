@@ -50,6 +50,15 @@ public class SurfaceViewRtc{
     public CallView initVideoViews(Connection mCall, 
             ViewConfig mLocalViewConfig, ViewConfig mRemoteViewConfig) 
     {
+    	if(mCall == null) {
+            lparm1 = new RelativeLayout.LayoutParams(mLocalViewConfig.width, mLocalViewConfig.hight);
+            lparm1.leftMargin = mLocalViewConfig.axis;
+            lparm1.topMargin = mLocalViewConfig.ordinate;
+            lparm2 = new RelativeLayout.LayoutParams(mRemoteViewConfig.width, mRemoteViewConfig.hight);
+            lparm2.leftMargin = mRemoteViewConfig.axis;
+            lparm2.topMargin = mRemoteViewConfig.ordinate;
+            return null;
+        }
         CallView mCallView = new CallView();
         if(null == mCallView.mvLocal)
         {

@@ -22,6 +22,8 @@ public class ConstantUtils
     public static final String ERROR_MSG_PARM_ERROR = ERROR_MSG_ERROR + "PARM_ERROR";
     public static final String ERROR_MSG_UNINIT = ERROR_MSG_ERROR + "UNINIT";
     public static final String ERROR_MSG_UNREGISTER = ERROR_MSG_ERROR + "UNREGISTER";
+    public static final String ERROR_MSG_UNCALL = ERROR_MSG_ERROR + "INVALID_OPERATION";
+    
     public static final String LOG_STATUS_LOGIN = ERROR_MSG_OK + ":LOGIN";
     public static final String LOG_STATUS_LOGOUT = ERROR_MSG_OK + ":LOGOUT";
     public static final String CALL_STATUS_NORMAL = ERROR_MSG_OK + ":NORMAL";
@@ -31,11 +33,11 @@ public class ConstantUtils
     public static final String MSG_STATUS_RECEIVE = ERROR_MSG_OK + ":RECEIVE";
 
     public static final int MSG_GETTOKEN = 10001;
-    public static final int MSG_SET_SURFACE_VIEW_VISIBILITUY = 10002;
+    public static final int MSG_SET_SURFACE_VIEW_VISIBILITY = 10002;
     public static final int MSG_REMOVE_SURFACE_VIEW = 10003;
     public static final int MSG_RTC_CLIENT_ON_INIT = 10004;
     public static final int MSG_REGISTER = 10005;
-    public static final int MSG_SET_LOCAL_VIEW_VISIBILITUY = 10006;
+    public static final int MSG_SET_LOCAL_VIEW_VISIBILITY = 10006;
     
     public static final int WHAT_CALLBACK_GLOBAL_STATUS = 0;
     public static final int WHAT_CALLBACK_LOG_STATUS = 1;
@@ -43,6 +45,7 @@ public class ConstantUtils
     public static final int WHAT_CALLBACK_REMOTE_PIC_PATH = 3;
     public static final int WHAT_CALLBACK_SET_APPKEY_ID = 4;
     public static final int WHAT_CALLBACK_MSG_STATUS = 5;
+    public static final int WHAT_CALLBACK_GROUP_STATUS = 6;
 
     public static final String TRUE_STR = "true";
     public static final String FALSE_STR = "false";
@@ -54,7 +57,7 @@ public class ConstantUtils
     public static final String PIC_FOLDER_NAME = "/photo/";
     public static final String PIC_FORMAT = ".png";
     
-    public static final String JK_LOCA_VIEW_CON = "localView";
+    public static final String JK_LOCAL_VIEW_CON = "localView";
     public static final String JK_REMOTE_VIEW_CON = "remoteView";
     public static final String JK_VIEW_CON_X = "x";
     public static final String JK_VIEW_CON_Y = "y";
