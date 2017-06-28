@@ -2,9 +2,10 @@
 <uexplugins>
    <!-- plugin uexESurfingRtc -->
     <plugin
-        uexName="uexESurfingRtc" version="3.1.10" build="10">
-	<info>增加多人业务接口，修复bug
+        uexName="uexESurfingRtc" version="3.1.11" build="11">
+	<info>解决作为被叫与chrome57以上版本互通问题
 	</info>
+	<build>10:增加多人业务接口</build>
 	<build>9:同步最新引擎解决多页面视频画面问题、同步原生sdk优化视频</build>
 	<build>8:增加隐藏本地预览接口、同步原生sdk优化视频</build>
 	<build>7:增加前后摄像头切换、摄像头旋转、窗口交换接口；呼叫接口增加参数</build>

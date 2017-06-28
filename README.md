@@ -12,8 +12,11 @@ description: uexESurfingRtc 是基于 WebRTC 技术的 Telco-OTT 实时云通讯
 
 */
 
+- [1、简介](#-1-http-appcan-download-oss-cn-beijing-aliyuncs-com-e5-85-ac-e6-b5-8b-2fgf-png-ignore- "1、简介")
+- [2、API概览](#-2-api-ignore- "2、API概览")
+- [3、更新历史](#-5-ignore- "更新历史")
 
-
+**附录：**-[配置说明](#-3-ios-config-xml-ignore- "配置说明")- [错误码](#-4-ignore- "错误码")
 #### **1、简介 ** <ignore>
 天翼RTC插件
 ###### **1.1、说明**<ignore>
@@ -941,11 +944,14 @@ function updateGroupStatus(opCode, dataType, data){
 ````
 
 注：flag的值为以下四项相加，更多含义见官网开发指导中的config·xml配置说明。
-1	<string>audio</string>	后台音乐播放
-4	<string>voip</string>	后台VoIP服务
-128	<string>fetch</string>	后台下载内容
-256	<string>remote-notification</string>	通过点击推送消息后台下载内容
 
+|  flag | info.plist里对应的字符串  | 说明  |  备注 |
+| ------------ | ------------ | ------------ | ------------ |
+| 1 | `<string>audio</string>` | 后台音乐播放 |    |
+| 4 | `<string>voip</string>` | 后台VoIP服务 |    |
+| 128 | `<string>fetch</string> `| 后台下载内容 |  仅iOS 7.0+ |
+| 256 | `<string>remote-notification</string> `| 通过点击推送消息后台下载内容 |  仅iOS 7.0+ |
+|  　 |  　 |   |  　 　 
 ###### **3.2、log开关**<ignore>
 iOS支持log开关，$uexESurfingRtc_enablelog$表示是否允许生成log。value值为“1”时表示打印log，“0”为关闭，不配置则默认关闭。开启后会在控制台输出RTC的log信息，并且保存在应用沙盒内的tmp文件夹下。此功能只为了方便开发者调试，正式发布时必须关闭log。
 
@@ -974,11 +980,17 @@ iOS支持log开关，$uexESurfingRtc_enablelog$表示是否允许生成log。val
 
 ###### **3.4、来电本地通知**<ignore>
 $uexESurfingRtc_notification$表示当应用在后台时，来电通知的展现内容（仅支持iOS 9及其以下系统，若iOS 10及其以上系统需要支持后台通知，需要配置APNs证书，请参考后续文档说明）。value的取值与通知内容的对应关系如下：
+
 （1）value="callName"，则通知内容="来电：xx"，xx为具体的来电号码（即call接口的callName参数）。
+
 （2）value="callInfo"，则通知内容="来电：xx"，xx为呼叫附加信息（即call接口的callInfo参数，可以传入昵称等自定义信息）。
+
 （3）value=任意字符串，则通知内容=value，若value中包含"callName"、"callInfo"或"nickName"字段，则通知内容的相应位置会替换为具体的"callName"、"callInfo"或"nickName"的值。
+
 （4）value="hideNotification"，则通知内容不显示。
+
 （5）若不配置则默认value为“callName”。
+
 （6）多人通知name="notificationGrp"，value=任意字符串，若value中包含"grpName"字段，则通知内容的相应位置会替换为具体的"grpName"的值。
 
 ````
@@ -990,10 +1002,15 @@ $uexESurfingRtc_notification$表示当应用在后台时，来电通知的展现
 ###### **3.5、APNs配置**<ignore>
 若应用在后台时被清除进程，或是设备启动后没有启动应用，或是iOS 10及其以上系统的应用进入后台，那么此时只能通过苹果的APNs来接收推送。目前仅支持推送点对点来电通知，通知格式为“来自 xxx 的来电”，其中xxx内容为登录账号。若开发者需要自定义此消息，请联系RTC官方进行后台配置。
 开发APNs推送功能流程如下：
+
 （1）开发者首先需要在Apple Developer官网上申请推送证书，生成cer格式的文件。推送证书分为两种：开发证书和生产证书，分别用于测试应用和正式发布应用。
+
 （2）不同应用有不同的推送证书，与应用的Bundle Identifier绑定，注意，生成推送证书后，对应的APP ID的Push Notifications项应变为enable，如果没有请手动编辑。
+
 （3）将cer证书双击导入钥匙串，生成推送许可证书，右键证书导出为p12格式的文件，生成过程中需要设置密码，请牢记密码。
+
 （4）将p12文件、导出密码、应用名称、应用的Bundle Identifier等信息发给RTC官方，可通过qq或邮件的形式发给开发者支持群里的” iOS SDK＠天翼RTC”(807382934@qq.com)。RTC官方审核后会生成推送所需要的pushId、pushKey、pushMaster，并将其发送给开发者，请妥善保存。不同的应用需要申请不同的pushId、pushKey、pushMaster，不能混用。
+
 （5）在config.xml文件中配置以下内容，enableAPNs为1表示开启APNs功能，0为关闭：
 ```
 <config desc="uexESurfingRtc" type="KEY">
@@ -1007,7 +1024,9 @@ $uexESurfingRtc_notification$表示当应用在后台时，来电通知的展现
 </config>
 ```
 （6）使用配置了APNs的证书进行打包。
+
 （7）需要保证应用安装后至少启动过一次，APNs才能开始推送。此后即使应用未启动，也能收到来电通知。
+
 （8）以下三种情况会触发onGlobalStatus回调，回调内容为“APNs:xxx”，xxx为推送内容。a)当应用未启动的情况下收到通知后，点击或滑动通知会触发应用启动，并触发回调；b)当应用在前台运行的情况下收到来电，不会弹出通知，但会触发回调；c)当应用在后台运行的情况下收到通知后，点击或滑动通知会进入应用，并触发回调。
   
 ###### **4、常见错误码**<ignore>
@@ -1049,12 +1068,14 @@ $uexESurfingRtc_notification$表示当应用在后台时，来电通知的展现
 
 ###### **iOS**<ignore>
 
-API版本: `uexESurfingRtc-3.0.18`
+API版本: `uexESurfingRtc-3.0.20`
 
-最近更新时间:`2016-12-13`
+最近更新时间:`2017-6-28`
 
 |  历史发布版本 | 更新内容    |
 | ------------ | ------------  |
+| 3.0.20  | 适配chrome57以上版本适配  |
+| 3.0.19  | 修复bug，接入原生动态库，支持https，支持点对点推送接听  |
 | 3.0.18  | 新增多人会话接口，支持APNs推送，login增加昵称参数，优化网络重连机制  |
 | 3.0.17  | xcode8编译支持iOS10，支持自定义通知   |
 | 3.0.16  | 优化通话流畅性与稳定性，恢复onGlobalStatus的回调时间   |
@@ -1077,12 +1098,14 @@ API版本: `uexESurfingRtc-3.0.18`
 
 ###### **Android**<ignore>
 
-API版本: `uexESurfingRtc-3.1.9`
+API版本: `uexESurfingRtc-3.1.11`
 
-最近更新时间:`2016-12-13`
+最近更新时间:`2017-6-28`
 
 | 历史发布版本 | 更新内容 |
 | ------------ |  ------------ |
+| 3.1.11   | 适配chrome57以上版本适配  |
+| 3.1.10   | 增加多人接口，同步最新引擎解决多页面视频画面问题、同步原生sdk优化视频 |
 | 3.1.9    | 修复多页面 |
 | 3.1.8    | 新增hideLocalView接口，原生sdk替换为2.7.0 |
 | 3.1.7    | 新增切换和旋转摄像头、交换窗口接口，call接口增加callInfo参数 |
