@@ -64,9 +64,9 @@ public class SurfaceViewRtc{
         {
 
             mCallView.mvLocal = createVideoView(true, mContext,
-                    false, mCall, mLocalViewConfig);
+                    true, mCall, mLocalViewConfig);
             mCallView.mvRemote = createVideoView(false, mContext,
-            		false, mCall, mRemoteViewConfig);
+            		true, mCall, mRemoteViewConfig);
         }
         return mCallView;
     }

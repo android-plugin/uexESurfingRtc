@@ -776,7 +776,7 @@ uexESurfingRtc.groupVideo(JSON.stringify(param));
 | ----- | ----- | ----- | ----- |
 | opId | Number | 是 |  操作ID,在此函数中不起作用,可忽略 |
 | dataType| Number | 是 | 数据类型String标识,可忽略 |
-| data | String | 是 | 返回客户端实时状态，详情如下：<br>"ClientListener:onInit,result=":result为初始化结果<br>"获取token: reason:":获取token结果，reason为失败原因<br>  "DeviceListener:onNewCall,call=":有新来电，call为来电信息，其中"ci"为对方携带的呼叫信息，"t"为呼叫类型（1：音频，3：音+视频），"dir"为呼叫方向（1：去电，2：来电），"uri"为对方账号<br>"DeviceListener:rejectIncomingCall call=":当前已处在通话中，拒绝新的点对点来电，call为来电信息，其中"ci"为对方携带的呼叫信息（即callInfo参数），"t"为呼叫类型（1：音频，3：音+视频），"dir"为呼叫方向（1：去电，2：来电），"uri"为对方账号<br>       "ConnectionListener:onConnecting":通话请求连接中<br>       "ConnectionListener:onConnected":通话已接通<br>"ConnectionListener:onVideo":通话接通后，媒体建立成功<br>"ConnectionListener:onDisconnect,code=":通话连接中断，code为错误码<br>"StateChanged,result=200":登录成功<br>    "StateChanged,result=-1001":没有网络<br>      "StateChanged,result=-1002":切换网络<br>       "StateChanged,result=-1003":网络较差<br>       "StateChanged,result=-1004":重连失败需要重新登录<br>       "StateChanged,result=-1500":同一账号在多个终端登录被踢下线<br>       "StateChanged,result=-1501":同一账号在多个设备类型登录<br>"call hangup":主动挂断 <br>"onReceiveIm:from:,msg:":接收到文本消息，from为发送账号，msg为消息内容<br>"APNs:xxx":仅适用于iOS，xxx为推送内容。以下三种情况会触发此回调。a)当应用未启动的情况下收到通知后，点击或滑动通知会触发应用启动，并触发回调；b)当应用在前台运行的情况下收到来电，不会弹出通知，但会触发回调；c)当应用在后台运行的情况下收到通知后，点击或滑动通知会进入应用，并触发回调。 |
+| data | String | 是 | 返回客户端实时状态，详情如下：<br>"ClientListener:onInit,result=":result为初始化结果<br>"获取token: reason:":获取token结果，reason为失败原因<br>  "DeviceListener:onNewCall,call=":有新来电，call为来电信息，其中"ci"为对方携带的呼叫信息，"t"为呼叫类型（1：音频，3：音+视频），"dir"为呼叫方向（1：去电，2：来电），"uri"为对方账号<br>"DeviceListener:rejectIncomingCall call=":当前已处在通话中，拒绝新的点对点来电，call为来电信息，其中"ci"为对方携带的呼叫信息（即callInfo参数），"t"为呼叫类型（1：音频，3：音+视频），"dir"为呼叫方向（1：去电，2：来电），"uri"为对方账号<br>       "ConnectionListener:onConnecting":通话请求连接中<br>       "ConnectionListener:onConnected":通话已接通<br>"ConnectionListener:onVideo":通话接通后，视频建立成功<br>"ConnectionListener:onDisconnect,code=":通话连接中断，code为错误码<br>"StateChanged,result=200":登录成功<br>    "StateChanged,result=-1001":没有网络<br>      "StateChanged,result=-1002":切换网络<br>       "StateChanged,result=-1003":网络较差<br>       "StateChanged,result=-1004":重连失败需要重新登录<br>       "StateChanged,result=-1500":同一账号在多个终端登录被踢下线<br>       "StateChanged,result=-1501":同一账号在多个设备类型登录<br>"call hangup":主动挂断 <br>"onReceiveIm:from:,msg:":接收到文本消息，from为发送账号，msg为消息内容<br>"APNs:xxx":仅适用于iOS，xxx为推送内容。以下三种情况会触发此回调。a)当应用未启动的情况下收到通知后，点击或滑动通知会触发应用启动，并触发回调；b)当应用在前台运行的情况下收到来电，不会弹出通知，但会触发回调；c)当应用在后台运行的情况下收到通知后，点击或滑动通知会进入应用，并触发回调。 |
 
 **版本支持:**
 
@@ -1068,12 +1068,13 @@ $uexESurfingRtc_notification$表示当应用在后台时，来电通知的展现
 
 ###### **iOS**<ignore>
 
-API版本: `uexESurfingRtc-3.0.20`
+API版本: `uexESurfingRtc-3.0.21`
 
-最近更新时间:`2017-6-28`
+最近更新时间:`2017-8-24`
 
 |  历史发布版本 | 更新内容    |
 | ------------ | ------------  |
+| 3.0.21  | 修复与安卓互通问题  |
 | 3.0.20  | 适配chrome57以上版本适配  |
 | 3.0.19  | 修复bug，接入原生动态库，支持https，支持点对点推送接听  |
 | 3.0.18  | 新增多人会话接口，支持APNs推送，login增加昵称参数，优化网络重连机制  |
@@ -1098,12 +1099,13 @@ API版本: `uexESurfingRtc-3.0.20`
 
 ###### **Android**<ignore>
 
-API版本: `uexESurfingRtc-3.1.11`
+API版本: `uexESurfingRtc-3.1.12`
 
-最近更新时间:`2017-6-28`
+最近更新时间:`2017-8-24`
 
 | 历史发布版本 | 更新内容 |
 | ------------ |  ------------ |
+| 3.1.12   | 适配android7.0;解决有时视频画面异常；解决ios呼叫android在部分网络画面卡住  |
 | 3.1.11   | 适配chrome57以上版本适配  |
 | 3.1.10   | 增加多人接口，同步最新引擎解决多页面视频画面问题、同步原生sdk优化视频 |
 | 3.1.9    | 修复多页面 |
