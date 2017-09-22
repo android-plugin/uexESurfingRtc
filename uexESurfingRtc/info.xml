@@ -2,9 +2,10 @@
 <uexplugins>
    <!-- plugin uexESurfingRtc -->
     <plugin
-        uexName="uexESurfingRtc" version="3.1.12" build="12">
-	<info>适配android7.0;解决有时视频画面异常；解决ios呼叫android在部分网络画面卡住
+        uexName="uexESurfingRtc" version="3.1.13" build="13">
+	<info>修复switchView导致的对端画面绿屏问题，switchCamera增加美颜参数
 	</info>
+	<build>12:适配android7.0;解决有时视频画面异常；解决ios呼叫android在部分网络画面卡住</build>
 	<build>11:解决作为被叫与chrome57以上版本互通问题</build>
 	<build>10:增加多人业务接口</build>
 	<build>9:同步最新引擎解决多页面视频画面问题、同步原生sdk优化视频</build>

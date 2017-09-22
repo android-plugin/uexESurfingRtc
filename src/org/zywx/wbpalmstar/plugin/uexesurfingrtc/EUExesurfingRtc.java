@@ -134,9 +134,13 @@ public class EUExesurfingRtc extends EUExBase {
                     if((null == mCallView) && (mGroupCall != null)) {
                         mCallView = mSurfaceViewRtc
                                 .initVideoViews(mGroupCall, mLocalViewConfig, mRemoteViewConfig);
+                        mGroupCall.buildVideo(mCallView.mvRemote);
+                        setViewVisibilityByHandler(View.VISIBLE);
+                    } else {
+                    	mGroupCall.buildVideo(mCallView.mvRemote);
+                    	removeViewFromCurrentWindow(mCallView.mvRemote);
+                        addViewToCurrentWindow(mCallView.mvRemote, mSurfaceViewRtc.lparm2);
                     }
-                    mGroupCall.buildVideo(mCallView.mvRemote);
-                    setViewVisibilityByHandler(View.VISIBLE);
                 }
             });
         }
@@ -684,9 +688,13 @@ public class EUExesurfingRtc extends EUExBase {
                     if((null == mCallView) && (mCall != null)) {
                         mCallView = mSurfaceViewRtc
                                 .initVideoViews(mCall, mLocalViewConfig, mRemoteViewConfig);
+                        mCall.buildVideo(mCallView.mvRemote);
+                        setViewVisibilityByHandler(View.VISIBLE);
+                    } else {
+                    	mCall.buildVideo(mCallView.mvRemote);
+                    	removeViewFromCurrentWindow(mCallView.mvRemote);
+                        addViewToCurrentWindow(mCallView.mvRemote, mSurfaceViewRtc.lparm2);
                     }
-                    mCall.buildVideo(mCallView.mvRemote);
-                    setViewVisibilityByHandler(View.VISIBLE);
                 }
             });
         }
@@ -1112,6 +1120,8 @@ public class EUExesurfingRtc extends EUExBase {
         {
         	if(parm[0].equals(ConstantUtils.CAMERA_BACK))
         		con.setCamera(0);
+        	else if(parm[0].equals("beauty"))
+        		con.ctbriVideoProcessing(0, 6, 0);
         	else
         		con.setCamera(1);
         }
